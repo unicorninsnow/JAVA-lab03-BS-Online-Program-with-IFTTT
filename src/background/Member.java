@@ -383,7 +383,7 @@ public class Member {
 	}
 	
 	public boolean stopTask(String taskID){
-		
+		//test
 	}
 	/**
 	 * 查询所有会员(管理员)的信息
