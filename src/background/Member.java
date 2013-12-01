@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package background;
 
 import java.sql.Connection;
@@ -11,11 +9,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Date;
 import java.util.UUID;
 
-/**
+/**会员类，分装一些数据和实现方法细节
+ * 
  * @author: 孟占帅
  * created on 2013-11-27
  */
@@ -157,7 +157,7 @@ public class Member {
 	 * @throws SQLException
 	 */
 	public boolean sendInstationMessage(String receiverName,String messageContent) throws SQLException{
-		if(getMemberDetails(receiverName)!=null){
+		if(getMemberDetails(receiverName)!=null){  //收信人不存在
 			PreparedStatement pst = messageConnection.prepareStatement("insert into message (type,content,sender,receiver) values (?,?,?,?)");
 			pst.setInt(1,1);
 			pst.setString(2,messageContent);
@@ -175,11 +175,11 @@ public class Member {
 	 * 当普通会员试图发布时，会返回false
 	 * @throws SQLException
 	 */
-	public boolean postNoticeMessage() throws SQLException{
+	public boolean postNoticeMessage(String messageContent) throws SQLException{
 		if(privilege==0) {
 			PreparedStatement pst = messageConnection.prepareStatement("insert into message (type,content,sender,receiver) values (?,?,?,?)");
 			pst.setInt(1,0);//0为够公告，1为站内
-			pst.setString(2,null);
+			pst.setString(2,messageContent);
 			pst.setString(3,name);
 			pst.setString(3,null);
 			pst.close();
@@ -220,6 +220,7 @@ public class Member {
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		ResultSet modifyMemberResultSet = modifyMemberStmt
 				.executeQuery("select * from where name = " + name + "");
+		modifyMemberResultSet.next();
 		modifyMemberResultSet.updateString("passWd", passWd);
 		modifyMemberResultSet.updateInt("sex", sex);
 		modifyMemberResultSet.updateInt("birthYear", birthYear);
@@ -362,6 +363,7 @@ public class Member {
 		}
 		Statement modifyTaskStmt = taskConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		ResultSet modifyTaskResultSet = modifyTaskStmt.executeQuery("select * from task where taskID = "+taskID+"");
+		modifyTaskResultSet.next();
 		modifyTaskResultSet.updateString("taskName",taskName);
 		modifyTaskResultSet.updateString("taskDeadTime", taskDeadTime);
 		modifyTaskResultSet.updateInt("taskTHISType",taskTHISType);
@@ -443,7 +445,7 @@ public class Member {
      * @param type
      * 0：THIS 1：THAT
      * @param selectedEventType
-     * 选中的eventType，这个作为列表属性值
+     * 选中的eventType，这个作为列表value属性值
      * @return
      * 若添加成功返回true（管理员操作），否则返回false(会员操作)
      * @throws SQLException
@@ -453,8 +455,8 @@ public class Member {
     		PreparedStatement nonAddedPstmt = eventConnection.prepareStatement("select * from event where type = ? and isAdded = 0 and eventType = ? ");
     		nonAddedPstmt.setInt(1, type);
     		nonAddedPstmt.setInt(2,selectedEventType);
-    		nonAddedPstmt.close();
         	ResultSet nonAddedEvent = nonAddedPstmt.getResultSet();
+        	nonAddedPstmt.close();
         	PreparedStatement addEventPstmt = eventConnection.prepareStatement("update event set isAdded = 1 where eventType = ?");
         	addEventPstmt.setString(1,nonAddedEvent.getString("eventType"));
         	addEventPstmt.executeUpdate();
@@ -463,6 +465,151 @@ public class Member {
     	}
     	return false;
     }
+    /**
+     * 删除TIHS，THAT事件，如有会员有该事件任务正在运行，则通知该会员停止任务
+     * @param type
+     * 0：THIS 1：THAT
+     * @param selectedEventType
+     * 选中的eventType，这个作为列表value属性值
+     * @return
+     * 删除成功返回true，会员操作则返回false
+     * @throws SQLException
+     */
+    public boolean deleteEvent(int type,int selectedEventType) throws SQLException{
+    	if(privilege==0) {//管理员
+    		PreparedStatement addedPstmt = eventConnection.prepareStatement("select * from event where type = ? and isAdded = 1 and eventType = ? ");
+    		addedPstmt.setInt(1, type);
+    		addedPstmt.setInt(2,selectedEventType);
+        	ResultSet addedEvent = addedPstmt.getResultSet();
+        	addedPstmt.close();
+        	/*去内存中正在运行的任务中找使用该事件的用户*/
+        	Iterator iter = runningTaskPoolHashMap.entrySet().iterator();
+        	while (iter.hasNext()) {
+              	Map.Entry entry = (Map.Entry) iter.next();
+                String key = (String) entry.getKey();
+                ArrayList runningTaskLst  = (ArrayList) entry.getValue();
+                ResultSet runningTaskSet = null; 
+                for(int i = 0;i < runningTaskLst.size(); i ++){  
+                	runningTaskSet = getTaskDetails((String)runningTaskLst.get(i));
+                    if(runningTaskSet!=null){
+                    	if(runningTaskSet.getString("taskBuilder").equals(key)){
+                    		String messageContent = "管理员消息：触发事件即将被删除，请您停止以下任务的运行:"+runningTaskSet.getString("taskName")+"\nID:"+runningTaskSet.getString("taskName");
+                    		sendInstationMessage(key,messageContent);
+                    	}
+                    } 
+                }  
+                runningTaskSet.close();
+        	}
+        	
+        	PreparedStatement deleteEventPstmt = eventConnection.prepareStatement("update event set isAdded = 0 where eventType = ?");
+        	deleteEventPstmt.setString(1,addedEvent.getString("eventType"));
+        	deleteEventPstmt.executeUpdate();
+        	addedEvent.close();
+        	deleteEventPstmt.close();
+        	return true;
+    	}
+    	return false;
+    	
+    }
+    /**
+     * 管理员取得其自己发布的消息，包括站内信和公告，
+     * 出于隐私管理考虑，我们认为普通会员间的通信管理员是不可以查看的
+     * @return
+     * 返回查询得到的结果集
+     * @throws SQLException
+     */
+    public ResultSet getAdminSendMessage() throws SQLException{
+    	if(privilege==0){
+    		PreparedStatement pstmt = messageConnection
+    				.prepareStatement("select * from message where sender = ?");
+    		pstmt.setString(1, name);
+    		ResultSet adminMessageResultSet = pstmt.getResultSet();
+    		pstmt.close();
+    		return adminMessageResultSet;
+    		
+    	}
+    	else
+    	   return null;
+    }
+    /**
+     * 修改消息内容，管理员有权限
+     * @param messageID
+     * 消息ID，不可以更改，作列表的value属性值
+     * @param type
+     * 消息内型 0：公告  1：站内信
+     * @param content
+     * 消息内容
+     * @param receiver
+     * 接受者，若是公告，则置空
+     * @return
+     * 返回-1：收信人不存在，返回1，修改成功，返回0，无权限(普通会员)
+     * @throws SQLException
+     */
+    public int modifyAdminSendMessage(String messageID,int type,String content,String receiver) throws SQLException{
+    	if(privilege==0){//管理员
+    		if(getMemberDetails(receiver)==null) //收信人不存在
+    			return -1;
+    		Statement modifyAdminSendMessageStmt = messageConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+    		ResultSet modifyMessageResultSet = modifyAdminSendMessageStmt.executeQuery("select * from message where messageID = "+messageID+"");
+    		modifyMessageResultSet.next();
+    		modifyMessageResultSet.updateInt("type",type);
+    		modifyMessageResultSet.updateString("content", content);
+    		modifyMessageResultSet.updateString("receiver",receiver);
+    		//将修改写到数据库
+    		modifyMessageResultSet.updateRow();
+    		return 1;
+    	}
+    	else
+    	    return 0;
+    }
+    /**
+     * 根据消息ID得到某一条消息的具体内容
+     * @param messageID
+     * @return
+     * 查询结果集
+     * @throws SQLException
+     */
+    public ResultSet getMessageDetails(String messageID) throws SQLException{
+    	PreparedStatement pstmt = messageConnection
+				.prepareStatement("select * from message where messageID = ?");
+		pstmt.setString(1, messageID);
+		ResultSet messageDetailsResultSet = pstmt.getResultSet();
+		pstmt.close();
+		return messageDetailsResultSet;
+    }
+    /**
+     * 修改消息
+     * @param messageID
+     * @return
+     * 修改成功返回true，会员无权修改，返回false
+     * @throws SQLException
+     */
+    public boolean deleteAdminSendMessage(String messageID) throws SQLException{
+    	if(privilege==0){
+    	Statement deleteAdminSendMessageStmt = messageConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		deleteAdminSendMessageStmt.executeUpdate("delete from task where taskID = "+messageID+"");
+		return true;
+    	}
+    	return false;
+    
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
