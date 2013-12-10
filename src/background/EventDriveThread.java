@@ -61,8 +61,9 @@ public class EventDriveThread extends  Thread {
 	 * 会员名，因为要记录消费记录，所以添加此成员
 	 * @throws SQLException
 	 * @throws NamingException
+	 * @throws ClassNotFoundException 
 	 */
-	public EventDriveThread (String taskID,String name) throws SQLException, NamingException{
+	public EventDriveThread (String taskID,String name) throws SQLException, NamingException, ClassNotFoundException{
 		taskID = this.taskID;
 		name = this.name;
 		taskResultSet = TaskTableManager.getTaskDetails(taskID);
@@ -326,6 +327,9 @@ public class EventDriveThread extends  Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.UUID;
 
 import javax.naming.NamingException;
 
@@ -41,29 +42,31 @@ public class MsgTableManager {
       * @param receiver
       * 接受者，若是公告，则置空
       * @return
-      * 返回-1：收信人不存在，返回1，修改成功，返回0，无权限(普通会员),返回2，出错
+      * 返回-1：收信人不存在，返回1，修改成功，返回0，无权限(普通会员)
       * @throws SQLException
      * @throws NamingException 
+     * @throws ClassNotFoundException 
       */
-     public int modifyAdminSendMessage(int privilege,String messageID,int type,String content,String receiver) throws SQLException, NamingException{
-     	if(privilege==0){//管理员	
-     		if(UserTableManager.getUserDetails(receiver)==null) //收信人不存在
+     public int modifyAdminSendMessage(int privilege,String messageID,int type,String content,String receiver) throws SQLException, NamingException, ClassNotFoundException{
+         System.out.println(privilege);     	
+    	 if(privilege==0){//管理员	
+     		if(!UserTableManager.getUserDetails(receiver).next()) //收信人不存在
      			return -1;
      		Connection conn = null;
-     		conn = jdbcPool.getDataSource().getConnection();
-     		if(conn!=null){
-     			Statement modifyAdminSendMessageStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-     			ResultSet modifyMessageResultSet = modifyAdminSendMessageStmt.executeQuery("select * from message where messageID = "+messageID+"");
-     			modifyMessageResultSet.next();
-     			modifyMessageResultSet.updateInt("type",type);
-     			modifyMessageResultSet.updateString("content", content);
-     			modifyMessageResultSet.updateString("receiver",receiver);
-     			//将修改写到数据库
-     			modifyMessageResultSet.updateRow();
-     			conn.close();
-     			return 1;
-     		}
-     		return 2;
+     		//conn = jdbcPool.getDataSource().getConnection();
+     		conn = jdbcPool.getDataSource();
+     		Statement modifyAdminSendMessageStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+     		ResultSet modifyMessageResultSet = modifyAdminSendMessageStmt.executeQuery("select * from message where messageID = '"+messageID+"'");
+     		modifyMessageResultSet.next();
+     		modifyMessageResultSet.updateInt("type",type);
+     		modifyMessageResultSet.updateString("content", content);
+     		modifyMessageResultSet.updateString("receiver",receiver);
+     		//将修改写到数据库
+     		modifyMessageResultSet.updateRow();
+     		System.out.println("nimadan");
+     		modifyMessageResultSet.close();
+     		conn.close();
+     		return 1;
      	}
      	else
      	    return 0;
@@ -77,19 +80,16 @@ public class MsgTableManager {
       * 查询结果集
       * @throws SQLException
      * @throws NamingException 
+     * @throws ClassNotFoundException 
       */
-     public ResultSet getMessageDetails(String messageID) throws SQLException, NamingException{
+     public ResultSet getMessageDetails(String messageID) throws SQLException, NamingException, ClassNotFoundException{
     	Connection conn = null;
-  		conn = jdbcPool.getDataSource().getConnection();
-  		if(conn!=null){
-  			PreparedStatement pstmt = conn.prepareStatement("select * from message where messageID = ?");
-  			pstmt.setString(1, messageID);
-  			ResultSet messageDetailsResultSet = pstmt.getResultSet();
-  			pstmt.close();
-  			conn.close();
-  			return messageDetailsResultSet;
-  		}
-  		return null;
+  		//conn = jdbcPool.getDataSource().getConnection();
+    	conn = jdbcPool.getDataSource();
+  		PreparedStatement pstmt = conn.prepareStatement("select * from message where messageID = ?");
+  		pstmt.setString(1, messageID);
+  		ResultSet messageDetailsResultSet = pstmt.executeQuery();
+  		return messageDetailsResultSet;
      }
      
      /**
@@ -106,12 +106,10 @@ public class MsgTableManager {
      	if(privilege==0){
      		Connection conn = null;
       		try {
-				conn = jdbcPool.getDataSource().getConnection();
-      		    if(conn!=null){
+				//conn = jdbcPool.getDataSource().getConnection();
+      			 conn = jdbcPool.getDataSource();
       		    	Statement deleteAdminSendMessageStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-      		    	deleteAdminSendMessageStmt.executeUpdate("delete from task where taskID = "+messageID+"");
-      		    	
- 		        }
+      		    	deleteAdminSendMessageStmt.executeUpdate("delete from message where messageID = '"+messageID+"'"); 
       		}
       		//操作不成功要进行回滚
       		catch (SQLException e) {
@@ -123,7 +121,7 @@ public class MsgTableManager {
 					e1.printStackTrace();
 				}
 				e.printStackTrace();
-			} catch (NamingException e) {
+			} /*catch (NamingException e) {
 				// TODO Auto-generated catch block
 				try {
 					conn.rollback();
@@ -131,6 +129,9 @@ public class MsgTableManager {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				e.printStackTrace();
+			} */catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
      	     finally{
@@ -150,25 +151,23 @@ public class MsgTableManager {
       * @param privilege
       * 权限，管理员0,普通会员1
       * @param String name
-      * 会员(管理员)名称
+      * 管理员名称
       * @return
       * 返回查询得到的结果集
+      * 无查询权限返回null
       * @throws SQLException
       * @throws NamingException 
+     * @throws ClassNotFoundException 
       */
-     public ResultSet getAdminSendMessage(int privilege,String name) throws SQLException, NamingException{
+     public ResultSet getAdminSendMessage(int privilege,String name) throws SQLException, NamingException, ClassNotFoundException{
      	if(privilege==0){
      		Connection conn = null;
-      		conn = jdbcPool.getDataSource().getConnection();
-      		if(conn!=null){
+      	//	conn = jdbcPool.getDataSource().getConnection();
+     		 conn = jdbcPool.getDataSource();
      		PreparedStatement pstmt = conn.prepareStatement("select * from message where sender = ?");
      		pstmt.setString(1, name);
-     		ResultSet adminMessageResultSet = pstmt.getResultSet();
-     		pstmt.close();
-     		conn.close();
+     		ResultSet adminMessageResultSet = pstmt.executeQuery();
      		return adminMessageResultSet;
-      		}
-     		return null;
      	}
      	else
      	   return null;
@@ -181,16 +180,15 @@ public class MsgTableManager {
  	 * @return 返回结果集
  	 * @throws SQLException
      * @throws NamingException 
+     * @throws ClassNotFoundException 
  	 */
- 	public ResultSet getNoticeMessage() throws SQLException, NamingException {
+ 	public ResultSet getNoticeMessage() throws SQLException, NamingException, ClassNotFoundException {
  		Connection conn = null;
-  		conn = jdbcPool.getDataSource().getConnection();
-  		if(conn!=null){
-  			PreparedStatement stmt = conn.prepareStatement("select * from message where type = 0");
-  			ResultSet noticeMessageResultSet = stmt.getResultSet();
-  			return noticeMessageResultSet;
-  		}
-  		return null;
+  		//conn = jdbcPool.getDataSource().getConnection();
+ 		 conn = jdbcPool.getDataSource();
+  		PreparedStatement stmt = conn.prepareStatement("select * from message where type = 0");
+  		ResultSet noticeMessageResultSet = stmt.executeQuery();
+  		return noticeMessageResultSet;
  	}
      
  	/**
@@ -199,24 +197,27 @@ public class MsgTableManager {
 	 * 管理员发布返回true
 	 * 当普通会员试图发布时，会返回false
 	 * @throws SQLException
+ 	 * @throws ClassNotFoundException 
 	 */
-	public boolean postNoticeMessage(int privilege,String name,String messageContent) throws SQLException {
+	public boolean postNoticeMessage(int privilege,String name,String messageContent) throws SQLException, ClassNotFoundException {
 		if(privilege==0) {
 			Connection conn = null;
 	  		try {
-				conn = jdbcPool.getDataSource().getConnection();
-	  		    if(conn!=null){
-			    PreparedStatement pst = conn.prepareStatement("insert into message (type,content,sender,receiver) values (?,?,?,?)");
-			    pst.setInt(1,0);
+				//conn = jdbcPool.getDataSource().getConnection();
+	  			 conn = jdbcPool.getDataSource();
+			    PreparedStatement pst = conn.prepareStatement("insert into message (messageID,type,content,sender,receiver) values (?,?,?,?,?)");
+			    String messageID = UUID.randomUUID().toString();// 用来生成号称全球唯一的ID
+			    pst.setString(1,messageID);
+			    pst.setInt(2,0);
 			    //0为够公告，1为站内
-			    pst.setString(2,messageContent);
-			    pst.setString(3,name);
-			    pst.setString(3,null);
+			    pst.setString(3,messageContent);
+			    pst.setString(4,name);
+			    pst.setString(5,null);
+			    pst.executeUpdate();
 			    pst.close();
 	  		    }
-	  		    }
 	  		//如果插入不成功，要进行回滚
-	  	  catch (NamingException e) {
+	  	 /* catch (NamingException e) {
 					// TODO Auto-generated catch block
 					try {
 						conn.rollback();
@@ -225,7 +226,7 @@ public class MsgTableManager {
 						e1.printStackTrace();
 					}
 					e.printStackTrace();
-		  }
+		  }*/
 	     	catch (SQLException e) {
 			// TODO Auto-generated catch block
   			try {
@@ -255,20 +256,23 @@ public class MsgTableManager {
 	 * 如果发送对象名称不存在，则发送失败，返回true
 	 * @throws SQLException
 	 * @throws NamingException 
+	 * @throws ClassNotFoundException 
 	 */
-	public boolean sendInstationMessage(String name,String receiverName,String messageContent) throws SQLException, NamingException{
-		if(UserTableManager.getUserDetails(receiverName)!=null){  //收信存在
+	public boolean sendInstationMessage(String name,String receiverName,String messageContent) throws SQLException, NamingException, ClassNotFoundException{
+		if(UserTableManager.getUserDetails(receiverName).next()){  //收信存在
 			Connection conn = null;
 	  		try {
-				conn = jdbcPool.getDataSource().getConnection();
-	  		    if(conn!=null){
-			PreparedStatement pst = conn.prepareStatement("insert into message (type,content,sender,receiver) values (?,?,?,?)");
-			pst.setInt(1,1);
-			pst.setString(2,messageContent);
-			pst.setString(3,name);
-			pst.setString(3,receiverName);
+				//conn = jdbcPool.getDataSource().getConnection();
+	  			 conn = jdbcPool.getDataSource();
+			PreparedStatement pst = conn.prepareStatement("insert into message (messageID,type,content,sender,receiver) values (?,?,?,?,?)");
+			String messageID = UUID.randomUUID().toString();// 用来生成号称全球唯一的ID
+			pst.setString(1, messageID);
+			pst.setInt(2,1);
+			pst.setString(3,messageContent);
+			pst.setString(4,name);
+			pst.setString(5,receiverName);
+			pst.executeUpdate();
 			pst.close();
-	  		    }
 	  		}
 	  	//操作不成功要进行回滚
       		catch (SQLException e) {
@@ -280,7 +284,7 @@ public class MsgTableManager {
 					e1.printStackTrace();
 				}
 				e.printStackTrace();
-			} catch (NamingException e) {
+			} /*catch (NamingException e) {
 				// TODO Auto-generated catch block
 				try {
 					conn.rollback();
@@ -289,7 +293,7 @@ public class MsgTableManager {
 					e1.printStackTrace();
 				}
 				e.printStackTrace();
-			}
+			}*/
      	     finally{
      	    	conn.close();
      	     }
@@ -297,8 +301,8 @@ public class MsgTableManager {
      	  
      
         }
-     
-		return false;
+		else
+	    	return false;
 	}
 	
 	
@@ -312,18 +316,22 @@ public class MsgTableManager {
 	 * @return 返回查询得到的结果集
 	 * @throws SQLException
 	 * @throws NamingException 
+	 * @throws ClassNotFoundException 
 	 */
-	public ResultSet getInstationMessage(String name) throws SQLException, NamingException {
+	public ResultSet getInstationMessage(String name) throws SQLException, NamingException, ClassNotFoundException {
 		/* type为1为站内信，0为公告 */
 		Connection conn = null;
-			conn = jdbcPool.getDataSource().getConnection();
-  		    if(conn!=null){
-		       PreparedStatement pstmt = conn.prepareStatement("select * from message where receiver = ? and type = 1");
-		       pstmt.setString(1, name);
-		      ResultSet instationMessageResultSet = pstmt.getResultSet();
-	        	return instationMessageResultSet;
-  		    }
-  		    return null;
+		//	conn = jdbcPool.getDataSource().getConnection();
+		conn = jdbcPool.getDataSource();
+	    PreparedStatement pstmt = conn.prepareStatement("select * from message where receiver = ? and type = 1");
+		pstmt.setString(1, name);
+		ResultSet instationMessageResultSet = pstmt.executeQuery();
+	    return instationMessageResultSet;
 	}
+	public static void main(String args[]) throws ClassNotFoundException, SQLException, NamingException{
+		MsgTableManager test = new MsgTableManager();
+		test.sendInstationMessage("mzs", "niu", "Are you OKAY?");
+	} 
+	
 	
 }

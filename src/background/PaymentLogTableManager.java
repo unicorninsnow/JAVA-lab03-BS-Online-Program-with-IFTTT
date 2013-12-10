@@ -37,26 +37,25 @@ public class PaymentLogTableManager {
 	 * @return 返回查询得到的结果集
 	 * @throws SQLException
 	 * @throws NamingException 
+	 * @throws ClassNotFoundException 
 	 */
-	public ResultSet getPaymentLog(String name) throws SQLException, NamingException {
+	public ResultSet getPaymentLog(String name) throws SQLException, NamingException, ClassNotFoundException {
 		Connection conn = null;
-		conn = jdbcPool.getDataSource().getConnection();
-	    if(conn!=null){
+		//conn = jdbcPool.getDataSource().getConnection();
+		 conn = jdbcPool.getDataSource();
 		PreparedStatement pstmt =conn
-				.prepareStatement("select * from paymentLog where name = ?");
+				.prepareStatement("select * from paymentLog where paymentOwener = ?");
 		pstmt.setString(1, name);
-		ResultSet paymentLogResultSet = pstmt.getResultSet();
+		ResultSet paymentLogResultSet = pstmt.executeQuery();
 		return paymentLogResultSet;
-	    }
-	    return null;
 	}
 	
 	public void addPaymentLog(String name,int paymentTHIS,int paymentTHAT,String paymentTime,int paymentAmount){
 		Connection conn = null;	
 		PreparedStatement pst;
 			try {
-				conn = jdbcPool.getDataSource().getConnection();
-			    if(conn!=null){
+				//conn = jdbcPool.getDataSource().getConnection();
+				 conn = jdbcPool.getDataSource();
 				pst = conn.prepareStatement("insert into paymentlog (paymentOwener,paymentTHIS,paymentTHAT,paymentTime,paymentAmount) values (?,?,?,?,?)");
 			pst.setString(1, name);
 			pst.setInt(2, paymentTHIS);
@@ -64,7 +63,8 @@ public class PaymentLogTableManager {
 			pst.setString(4, paymentTime);
 			pst.setInt(5, paymentAmount);
 			pst.executeUpdate();
-			} 
+			pst.close();
+			conn.close();
 			}catch (SQLException e) {
 				// TODO Auto-generated catch block
 				try {
@@ -74,17 +74,27 @@ public class PaymentLogTableManager {
 					e1.printStackTrace();
 				}  //失败则回滚
 				e.printStackTrace();
-			} catch (NamingException e) {
+			} //catch (NamingException e) {
+				// TODO Auto-generated catch block
+			//	e.printStackTrace();
+			//}
+              catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		   try {
-			conn.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	    }
+	public static void main(String args[]) throws SQLException, ClassNotFoundException, NamingException{
+		PaymentLogTableManager test = new PaymentLogTableManager();
+		//ResultSet temp = test.getPaymentLog("mzs");
+		//temp.next();
+		//System.out.println(temp.getString("paymentAmount"));
+		test.addPaymentLog("niu", 1, 2, "2013-11-14", 1000);
+		
+		
+	}
+		
+}
+
 
 	
-}
+

@@ -1,30 +1,40 @@
-<span style="font-size:12px;"><%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>  
-  
-<%@ page import="java.sql.*,javax.sql.*,javax.naming.*" %>  
-  
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html>  
-  
-  <head>  
-  
-    <title>My JSP 'tomcatTest.jsp' starting page</title>  
-  
-  </head>  
-  
-  <body>  
-  
-    <%  
-          Context  ctx = new InitialContext();  
-          DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/ifttt"); 
-          Connection con = ds.getConnection();  
-          Statement st = con.createStatement();  
-          st.executeUpdate("create table nim");  
-          st.close();  
-          con.close();            
-  
-     %>  
-  
-  </body>  
-  
-</html>  
-  
-</span>  
+<%@ page import = "background.UserTableManager" %>
+<jsp:useBean id="userTest"
+class = "background.UserTableManager" scope="page" ></jsp:useBean>
+
+<html>
+<body>
+<h1>Registration Using JSP</h1>
+
+ <%
+ if (addressId.getLastName() == null ||
+ addressId.getFirstName() == null) {
+ out.println("Last Name and First Name are required");
+ return; // End the method
+ }
+ %>
+
+ <p>You entered the following data</p>
+ <p>Last name: <%= addressId.getLastName() %></p>
+ <p>First name: <%= addressId.getFirstName() %></p>
+ <p>MI: <%= addressId.getMi() %></p>
+ <p>Telephone: <%= addressId.getTelephone() %></p>
+ <p>Email: <%= addressId.getEmail() %></p>
+ <p>Address: <%= addressId.getStreet() %></p>
+ <p>City: <%= addressId.getCity() %></p>
+ <p>State: <%= addressId.getState() %></p>
+ <p>Zip: <%= addressId.getZip() %></p>
+
+ <!-- Set the action for processing the answers -->
+ <form method = "post" action = "StoreStudent.jsp">
+ <input type = "submit" value = "Confirm">
+33 </form>
+34 </body>
+35 </html>
+GetRegistrationData.jsp invokes StoreStudent.jsp (line 31) when the user clicks
+the Confirm button. In Listing 40.18, the same addressId is shared with the preceding page
+within the scope of the same session in lines 3–4. A bean for StoreData is created in lines
+5–6 with the scope of application.
+<jsp:setProperty name = "addressId" property = "*" />
+scope = "session"
+id = "addressId"
