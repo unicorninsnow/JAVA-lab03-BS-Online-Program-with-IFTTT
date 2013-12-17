@@ -38,7 +38,7 @@ import org.apache.commons.httpclient.HttpException;
 
 
 /**
- * 事件出发线程<br>
+ * 事件触发线程<br>
  * thatType <b>   3:发邮件   4：发微博<br>
  * thatType <b>   0：定时  1： 收到邮件    2：最新微博含指定内容
  * 
@@ -64,10 +64,11 @@ public class EventDriveThread extends  Thread {
 	 * @throws ClassNotFoundException 
 	 */
 	public EventDriveThread (String taskID,String name) throws SQLException, NamingException, ClassNotFoundException{
-		taskID = this.taskID;
-		name = this.name;
+		this.taskID = taskID;
+	    this.name = name;
+		System.out.println(taskID);
 		taskResultSet = TaskTableManager.getTaskDetails(taskID);
-		taskResultSet.next();
+		
 		Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());//可能一编译就好了
 		final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
 		//Imap收邮件
@@ -89,6 +90,7 @@ public class EventDriveThread extends  Thread {
 	/*发邮件*/
 	private void sendGMail() throws MessagingException, SQLException {
 		/* 发邮件 */
+		System.out.println("fayoujian");
 		Properties propsSmtp = System.getProperties();
 		propsSmtp.setProperty("mail.smtp.host", "smtp.gmail.com");
 		final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
@@ -98,19 +100,25 @@ public class EventDriveThread extends  Thread {
 		propsSmtp.setProperty("mail.smtp.socketFactory.port", "465");
 		propsSmtp.put("mail.smtp.auth", "true");
 		Session sessionSmtp = Session.getInstance(propsSmtp);
-		String srcMailBox = taskResultSet.getString("taskTHISMailBox");
-		String srcMailPassWd = taskResultSet.getString("taskTHISMailPassWd");
+		String srcMailBox = taskResultSet.getString("srcMailBox");
+		taskResultSet.beforeFirst();
+		if(taskResultSet.next()){
+		String srcMailPassWd = taskResultSet.getString("srcMailPassWd");
 		URLName urln = new URLName("smtp", "smtp.gmail.com", 465, null,srcMailBox,srcMailPassWd);
 		Transport store = sessionSmtp.getTransport(urln);
 		store.connect();// 链接服务器
+		System.out.println("连接");
 		Message message = new MimeMessage(sessionSmtp);
-		message.addRecipients(Message.RecipientType.TO, InternetAddress.parse(taskResultSet.getString("taskTHATMailBox")));
+		message.addRecipients(Message.RecipientType.TO, InternetAddress.parse(taskResultSet.getString("dstMailBox")));
 		// Message.RecipientType.TO：普通的“收件人”
 		message.setText(taskResultSet.getString("content"));// 设置邮件内容，纯文本
 		message.setSubject(taskResultSet.getString("mailSubject"));
 		message.setSentDate(new Date());
 		store.sendMessage(message, message.getAllRecipients());
 		store.close();
+		}
+		//else
+		//给用户发信
 		
 	}
 	
@@ -122,13 +130,16 @@ public class EventDriveThread extends  Thread {
 	 * @throws SQLException
 	 */
     private void updateWeibo() throws HttpException, IOException, SQLException{
-			String access_token = getWeiboToken.getToken(taskResultSet.getString("taskTHATWeiboID"),taskResultSet.getString("taskTHATWeiboPassWd"));
+			String access_token = getWeiboToken.getToken(taskResultSet.getString("updateWeiboID"),taskResultSet.getString("updateWeiboPassWd"));
 			Timeline tm = new Timeline();
+			System.out.println("access_token"+access_token);
+			if(access_token!=null){   //输入的账号正确
 			tm.client.setToken(access_token);
 			try {
 				Status status = tm.UpdateStatus(taskResultSet.getString("content"));
 			} catch (WeiboException e) {
 				e.printStackTrace();
+			}
 			}
 
 	}
@@ -139,8 +150,8 @@ public class EventDriveThread extends  Thread {
      * @throws SQLException
      */
     private boolean listenGmailBox() throws SQLException{
-    	    String srcMailBox = taskResultSet.getString("taskTHISMailBox");
-		    String srcMailPassWd = taskResultSet.getString("taskTHISMailPassWd");
+    	    String srcMailBox = taskResultSet.getString("srcMailBox");
+		    String srcMailPassWd = taskResultSet.getString("srcMailPassWd");
 			URLName urln = new URLName("imap", "imap.gmail.com", 993, null,
 					srcMailBox, srcMailPassWd);
 			Store store = null;
@@ -161,6 +172,7 @@ public class EventDriveThread extends  Thread {
             while (messages.length <= count) {
             	messages = inbox.getMessages();
             	inbox.fetch(messages, profile);
+            	System.out.println("sleeppppppppp");
             	Thread.sleep(15000);
 			}
 			}
@@ -193,20 +205,26 @@ public class EventDriveThread extends  Thread {
      */
     
 	private boolean checkWeiboContent() throws SQLException, HttpException, IOException, WeiboException, InterruptedException{
-    	    String weiboID = taskResultSet.getString("taskTHISWeiboID");
-    	    String weiboPassWd = taskResultSet.getString("taskTHISWeiboPassWd");
+    	    String weiboID = taskResultSet.getString("updateWeiboID");
+    	    String weiboPassWd = taskResultSet.getString("updateWeiboPassWd");
     	    String checkContent = taskResultSet.getString("weiboCheckCon"); 
+    	    System.out.println("checkContent"+checkContent);
     		String access_token =  getWeiboToken.getToken(weiboID,weiboPassWd);
+    		System.out.println(access_token);
     		Timeline tm = new Timeline();
     		tm.client.setToken(access_token);
-    		StatusWapper status = tm.getUserTimeline();
     		while(true){
+    			
+        		StatusWapper status = tm.getUserTimeline();
     			if(status.getTotalNumber()>0){
     				List<Status> s = status.getStatuses();
+    				System.out.println(s.get(0).getText());
+			    	System.out.println(checkContent);
     			    if(s.get(0).getText().contains(checkContent))
-    				   break;
+    				    break;
     			 
     	        }
+    			System.out.println("sleeeeeee");
     	    //10秒去读一次微博内容
    			 Thread.sleep(10000);   
     		}
@@ -251,6 +269,7 @@ public class EventDriveThread extends  Thread {
 		try {
 		  int thisType = taskResultSet.getInt("taskTHISType");
 		  int thatType = taskResultSet.getInt("taskTHATType");
+		  System.out.println(thisType+"  "+thatType);
 		  if(thisType==0) //定时任务
 		  {   
 			  
@@ -258,24 +277,31 @@ public class EventDriveThread extends  Thread {
 			   if(checkClockTime(clockTime)){
 			      Thread.sleep(clockTime);
 			      if(thatType==3) //定时发邮件
-			      {
+			      {   
+			    	  System.out.println("发邮件");
 			    	  sendGMail();
+			    	  System.out.println("发完");
 			      }
 				  if(thatType==4)//定时发微博
 				  {
 					  updateWeibo();
+					  System.out.println("发完");
 				  }
 		  }
+		  }
 		  else if(thisType==1){//收到邮件作为触发源
+			  System.out.println(thisType+"youjian");
 			  if(listenGmailBox()){
 				  //收到邮件发邮件到指定邮箱
+				  System.out.println("1");
 				  if(thatType==3)
 				  {
 					  sendGMail();
 				  }
 				  //收到邮件发微博
 				  if(thatType==4)
-				  {
+				  {   
+					  System.out.println("4");
 					  updateWeibo();
 				  }
 			  }
@@ -291,11 +317,13 @@ public class EventDriveThread extends  Thread {
 				  }
 			  }
 			   
-		}
+		
+	
 		  
 		UserTableManager userManage = new UserTableManager();
 		int increAccount = 1000*userManage.getUserDiscount(name)/10;
-		userManage.modifyUserAccount(name,-increAccount);
+		System.out.println("zhekou    "+increAccount);
+		userManage.modifyUserAccount(name,(-1)*increAccount);
 		userManage.modifyUserPoints(name, 100);//执行一个任务，则积分加100
 		//记录消费记录
 		String format = "yyyy-MM-dd HH:mm:ss";
@@ -304,7 +332,11 @@ public class EventDriveThread extends  Thread {
 		String  nowString = sdf.format(now);// 返回规定格式的字符串，字符串表示时间
 		PaymentLogTableManager paymentLogManager = new PaymentLogTableManager();
 		paymentLogManager.addPaymentLog(name, thisType, thatType,nowString,increAccount);
-		  
+		//任务运行完成，从hash pool删除
+		System.out.println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+		RunningTaskPool deleteRanThread = new RunningTaskPool();
+		deleteRanThread.stopTask(name, taskID);
+		System.out.println("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -335,7 +367,12 @@ public class EventDriveThread extends  Thread {
 		}
 	}
 
-
+     
+//	public static void main(String args[]) throws ClassNotFoundException, SQLException, NamingException{
+//		EventDriveThread test = new EventDriveThread("dingshifayoujian","mzs");
+//	 	test.start();
+//		
+//	}
 
 
 				

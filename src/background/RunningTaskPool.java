@@ -47,7 +47,7 @@ public class RunningTaskPool {
 	 * 返回找到的线程，可能为null
 	 */
 	public Thread getTaskThread(String taskID){
-		Thread taskThreadTemp = (Thread)runningTaskThreadPool.get(taskID);
+		Thread taskThreadTemp = (EventDriveThread)runningTaskThreadPool.get(taskID);
         return taskThreadTemp;
 		
 	}
@@ -93,13 +93,15 @@ public class RunningTaskPool {
 		//根据hashMap中key同则覆盖
 		if(getTaskThread(taskID)!=null){
 			runningTaskThreadPool.put(taskID, null);
+			System.out.println("deletTasjThread");
 			return true;
 		}
 		return false;
 	}
 	
 	/**
-	 * 从运行任务存储空间删除某个的任务
+	 * 从运行任务存储空间删除某个的任务<br>
+	 * 包括删除线程
 	 * @param name
 	 * @param taskID
 	 * @return
@@ -119,7 +121,7 @@ public class RunningTaskPool {
 	 * @return
 	 */
 	public static boolean isRunning(String taskID){
-		Thread tempThread = runningTaskThreadPool.get(taskID);
+		Thread tempThread = (EventDriveThread)runningTaskThreadPool.get(taskID);
 		if(tempThread==null)
 			return false;
 		return true;
@@ -135,8 +137,9 @@ public class RunningTaskPool {
 	 * 若任务正在运行，则返回false，否则运行任务，返回true
 	 * @throws SQLException
 	 * @throws NamingException
+	 * @throws ClassNotFoundException 
 	 */
-	public void startTask(String name,String taskID) throws SQLException, NamingException{
+	public void startTask(String name,String taskID) throws SQLException, NamingException, ClassNotFoundException{
 		//请在开始前，调用函数isRunning判断某一任务是否正在运行
 		//同时判断余额是否大于等于1000，因为执行一个任务扣费1000
 		EventDriveThread taskThread = new EventDriveThread(taskID,name);
@@ -153,8 +156,19 @@ public class RunningTaskPool {
 	 */
 	public  void stopTask(String name,String taskID){
 		EventDriveThread taskThread =(EventDriveThread)getTaskThread(taskID);
-		if(taskThread!=null)
+		System.out.println("daoci1111");
+		if(taskThread!=null){
+			System.out.println("daoci2222");
 			deleteRunningTask(name,taskID);
+		}
 	}
 		
+	public static void main(String args[]) throws ClassNotFoundException, SQLException, NamingException{
+		RunningTaskPool test = new RunningTaskPool();
+		System.out.println(isRunning("dingshifayoujian"));
+		test.startTask("mzs", "dingshifayoujian");
+		//test=null;
+		System.out.println(isRunning("dingshifayoujian"));
+		
+	}
 }

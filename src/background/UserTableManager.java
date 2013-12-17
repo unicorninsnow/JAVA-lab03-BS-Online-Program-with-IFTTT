@@ -262,6 +262,7 @@ public class UserTableManager {
 			pst.executeUpdate();
 			} catch (SQLException e) {
 				conn.rollback();
+				//System.out.println(e.getMessage());
 				e.printStackTrace();
 			} /*catch (NamingException e) {
 				// TODO Auto-generated catch block

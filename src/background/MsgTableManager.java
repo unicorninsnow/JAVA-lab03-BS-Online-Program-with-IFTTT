@@ -193,6 +193,8 @@ public class MsgTableManager {
      
  	/**
 	 * 发布公告，只有管理员才有此项权限
+	 * @name
+	 * 发布者的name
 	 * @return
 	 * 管理员发布返回true
 	 * 当普通会员试图发布时，会返回false

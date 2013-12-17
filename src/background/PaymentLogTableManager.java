@@ -49,7 +49,14 @@ public class PaymentLogTableManager {
 		ResultSet paymentLogResultSet = pstmt.executeQuery();
 		return paymentLogResultSet;
 	}
-	
+	/**
+	 * 添加消费记录，在任务执行后自己调用
+	 * @param name
+	 * @param paymentTHIS
+	 * @param paymentTHAT
+	 * @param paymentTime
+	 * @param paymentAmount
+	 */
 	public void addPaymentLog(String name,int paymentTHIS,int paymentTHAT,String paymentTime,int paymentAmount){
 		Connection conn = null;	
 		PreparedStatement pst;

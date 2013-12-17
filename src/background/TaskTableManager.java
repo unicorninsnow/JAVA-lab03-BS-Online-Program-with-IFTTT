@@ -25,6 +25,24 @@ public class TaskTableManager {
 	 * taskID由后台根据taskName得到
 	 * 
 	 */
+	/**
+	 * 
+	 * @param taskName
+	 * @param taskBuilder
+	 * @param taskDeadTime
+	 * @param taskTHISType
+	 * @param taskTHATType
+	 * @param srcMailBox
+	 * @param srcMailPassWd
+	 * @param updateWeiboID
+	 * @param updateWeiboPassWd
+	 * @param dstMailBox
+	 * @param listenWeiboID
+	 * @param listenWeiboPassWd
+	 * @param content
+	 * @param mailSubject
+	 * @param weiboCheckCon
+	 */
 	public void createNewTask(String taskName, String taskBuilder,
 		    String taskDeadTime, int taskTHISType,
 			int taskTHATType, String srcMailBox,

@@ -20,15 +20,15 @@ import weibo4j.model.WeiboException;
 import weibo4j.util.WeiboConfig;
 
 /***
- * 妯℃嫙鑷姩鐧诲綍骞跺彂寰崥
+ * 模拟登录并得到登录后的Token
  * @author Daniel
  * 
  */
 public class getWeiboToken{
 	/***
-	 * 妯℃嫙鐧诲綍骞跺緱鍒扮櫥褰曞悗鐨凾oken
-	 * @param username 鐢ㄦ埛鍚�
-	 * @param password 瀵嗙爜
+	 * 模拟登录并得到登录后的Token
+	 * @param username 用户名
+	 * @param password 密码
 	 * @return
 	 * @throws HttpException
 	 * @throws IOException
@@ -39,19 +39,20 @@ public class getWeiboToken{
 		String url = WeiboConfig.getValue("authorizeURL");
 
 		PostMethod postMethod = new PostMethod(url);
-		// 搴旂敤鐨凙pp Key
+		// 应用的App Key
 		postMethod.addParameter("client_id", clientId);
-		// 搴旂敤鐨勯噸瀹氬悜椤甸潰
+		// 应用的重定向页面
 		postMethod.addParameter("redirect_uri", redirectURI);
-		// 妯℃嫙鐧诲綍鍙傛暟
-		// 寮�彂鑰呮垨娴嬭瘯璐﹀彿鐨勭敤鎴峰悕鍜屽瘑鐮�
+		// 模拟登录参数
+		// 开发者或测试账号的用户名和密码
 		postMethod.addParameter("userId", username);
+		postMethod.addParameter("passwd", password);
 		postMethod.addParameter("isLoginSina", "0");
 		postMethod.addParameter("action", "submit");
 		postMethod.addParameter("response_type", "code");
 		HttpMethodParams param = postMethod.getParams();
 		param.setContentCharset("UTF-8");
-		// 娣诲姞澶翠俊鎭�
+		// 添加头信息
 		List<Header> headers = new ArrayList<Header>();
 		headers.add(new Header("Referer", "https://api.weibo.com/oauth2/authorize?client_id=" + clientId
 				+ "&redirect_uri=" + redirectURI + "&from=sina&response_type=code"));
@@ -62,10 +63,10 @@ public class getWeiboToken{
 		client.executeMethod(postMethod);
 		int status = postMethod.getStatusCode();
 		if (status != 302) {
-			System.out.println("token鍒锋柊澶辫触");
+			System.out.println("token刷新失败");
 			return null;
 		}
-		// 瑙ｆ瀽Token
+		// 解析Token
 		Header location = postMethod.getResponseHeader("Location");
 		if (location != null) {
 			String retUrl = location.getValue();
@@ -88,5 +89,6 @@ public class getWeiboToken{
 		}
 		return null;
 	}
-	
+
+
 }
