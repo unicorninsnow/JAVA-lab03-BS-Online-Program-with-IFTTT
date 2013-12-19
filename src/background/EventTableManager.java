@@ -147,7 +147,7 @@ public class EventTableManager {
     		addedPstmt.setInt(1, type);
     		addedPstmt.setInt(2,selectedEventType);
         	ResultSet addedEvent = addedPstmt.executeQuery();//得到所有可以删除的事件
-            addedEvent.next();
+            if(addedEvent.next()){
         	/*去内存中正在运行的任务中找使用该事件的用户*/
         	Iterator iter =  RunningTaskPool.runningTaskPool.entrySet().iterator();
         	while (iter.hasNext()) {
@@ -159,7 +159,7 @@ public class EventTableManager {
                 	runningTaskSet = TaskTableManager.getTaskDetails((String)runningTaskLst.get(i));
                     if(runningTaskSet.next()){
                     	if(runningTaskSet.getString("taskBuilder").equals(key)){
-                    		String messageContent = "管理员消息：触发事件即将被删除，请您停止以下任务的运行:"+runningTaskSet.getString("taskName")+"\nID:"+runningTaskSet.getString("taskName");
+                    		String messageContent = "管理员消息：触发源事件即将被删除，请您停止以下任务的运行:"+runningTaskSet.getString("taskName")+"\nID:"+runningTaskSet.getString("taskName");
                     		MsgTableManager sendInMs = new MsgTableManager();
                     		//发信人   收信人   站内信内容
                     		sendInMs.sendInstationMessage(name,key,messageContent);
@@ -168,7 +168,7 @@ public class EventTableManager {
                 }  
                 runningTaskSet.close();
         	}
-        	
+            }
         	PreparedStatement deleteEventPstmt = conn.prepareStatement("update event set isAdded = 0 where eventType = ?");
         	deleteEventPstmt.setString(1,addedEvent.getString("eventType"));
         	deleteEventPstmt.executeUpdate();

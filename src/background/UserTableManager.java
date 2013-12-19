@@ -11,9 +11,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.UUID;
 
 import javax.naming.*;
 import javax.sql.*;
+
+import org.json.JSONException;
 
 /**
  * 用来管理数据库中User表及封装一些相关操作<br>
@@ -55,15 +58,93 @@ public class UserTableManager {
 	}
 	
 	/**
-	 * 注册函数，然后写
+	 * 注册函数<br>
+	 * 账户初始化1000,积分0,注册时间是当前时间<br>
+	 * 只可以注册普通用户，所以权限均为1
+	 * 年龄自动生成
+	 * @param name
+	 * @param passWd
+	 * @param sex
+	 * @birthDate
+	 * @param imageUrl
+	 * @param email
 	 */
-	
-//	public void userRegister(String name,String passWd,int privilege,int account,String ){
-//		
-//		
-//		
-//		
-//	}
+	public void userRegister(String name,String passWd,int sex,String birthDate,String imageUrl,String email){
+		    PreparedStatement userRegsPst;
+		    Connection conn = null;
+		    try {
+			//conn = jdbcPool.getDataSource().getConnection();
+			conn = jdbcPool.getDataSource();
+			userRegsPst = conn.prepareStatement("insert into user (name,passWd,account,registerDate,sex,birthDate,age,imageUrl,email,privilege,points,level) values (?,?,?,?,?,?,?,?,?,?,?,?)");
+			userRegsPst.setString(1, name);
+			userRegsPst.setString(2, passWd);
+			userRegsPst.setInt(3,1000);
+			String format = "yyyy-MM-dd HH:mm";
+			SimpleDateFormat sdf = new SimpleDateFormat(format);
+			Date now = new Date();
+			String  registerTime = sdf.format(now);// 返回规定格式的字符串，字符串表示时间
+			userRegsPst.setString(4, registerTime);
+			userRegsPst.setInt(5, sex);
+			userRegsPst.setString(6, birthDate);
+			sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date birthTime = sdf.parse(birthDate);
+			Date nowTime = new Date();
+			int age = nowTime.getYear() - birthTime.getYear();
+			userRegsPst.setInt(7, age);
+			userRegsPst.setString(8, imageUrl);
+			userRegsPst.setString(9, email);
+			userRegsPst.setInt(10, 1);
+			userRegsPst.setInt(11, 0);//普通用户
+			userRegsPst.setInt(12, 0);//level
+			userRegsPst.executeUpdate();
+			userRegsPst.close();
+		    
+		}
+    //同样插入不成功要进行回滚
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+			
+			
+	}
+	/**
+	 * 登录时验证密码和账号
+	 * @param name
+	 * @param passWd
+	 * @return
+	 * 登陆成功返回true，否则返回false
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
+	 */
+	public boolean  login(String name,String passWd) throws SQLException, ClassNotFoundException{
+		Connection conn = null;
+		//conn = (jdbcPool.getDataSource()).getConnection();
+		conn = jdbcPool.getDataSource();
+		Statement loginPst = conn.createStatement();
+		ResultSet loginResultSet = loginPst.executeQuery("select * from user where name = '" + name +"' and passWd = '"+passWd+"'");
+		return loginResultSet.next();
+	}
 	
 	/**
 	 * 修改会员资料
@@ -275,24 +356,32 @@ public class UserTableManager {
 	       }
     }
     /**
-     * 修改会员积分
+     * 修改会员积分(连带修改等级)
      * @param name
      * @param increPoint
      * @return
      * 修改失败返回false
      * @throws SQLException
      * @throws ClassNotFoundException 
+     * @throws NamingException 
      */
-    public void modifyUserPoints(String name,int increPoint) throws SQLException, ClassNotFoundException{
+    public void modifyUserPoints(String name,int increPoint) throws SQLException, ClassNotFoundException, NamingException{
     	PreparedStatement pst = null;
     	Connection conn = null;
 	    try {
 			//conn = (jdbcPool.getDataSource()).getConnection();
 	    	conn = jdbcPool.getDataSource();
+	    	int level = (getUserPoints(name)+increPoint)/300;
 			pst = conn.prepareStatement("update user set points = points + ? where name = ?");
 			pst.setInt(1,increPoint);
+			//pst.setInt(2, level);
 			pst.setString(2, name);
 			pst.executeUpdate();
+			pst = conn.prepareStatement("update user set level = ? where name = ?");
+			pst.setInt(1,level);
+			pst.setString(2, name);
+			pst.executeUpdate();
+			pst.close();
 			} catch (SQLException e) {
 				conn.rollback();
 				e.printStackTrace();
@@ -307,17 +396,13 @@ public class UserTableManager {
     }
   
     
-    public static void main(String args[]) throws ClassNotFoundException, SQLException, NamingException, ParseException{
+    public static void main(String args[]) throws ClassNotFoundException, SQLException, NamingException, ParseException, JSONException{
     	//Scanner input = new Scanner(System.in);
     	UserTableManager temp =new UserTableManager();
-    	temp.modifyUserPoints("mzs", 1000);
-    	temp.modifyUserPoints("mzs", -300);
-    	temp.modifyUserAccount("niu",20);
-    	temp.modifyUserAccount("n",20);
-    	//System.out.println((UserTableManager.getUserDetails(name)).next());
+    	System.out.println(ResultSet2Json.resultSetToJson(temp.lookupUser(0)));
     	
     }
-
+ //注册时候点击邮箱验证
     
 }
 

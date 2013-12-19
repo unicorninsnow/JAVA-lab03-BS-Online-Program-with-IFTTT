@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 import javax.naming.NamingException;
@@ -61,6 +63,12 @@ public class MsgTableManager {
      		modifyMessageResultSet.updateInt("type",type);
      		modifyMessageResultSet.updateString("content", content);
      		modifyMessageResultSet.updateString("receiver",receiver);
+     		//最新改动时间
+     		String format = "yyyy-MM-dd HH:mm:ss";
+    		SimpleDateFormat sdf = new SimpleDateFormat(format);
+    		Date now = new Date();
+    		String  nowString = sdf.format(now);
+     		modifyMessageResultSet.updateString("lastModifyTime",nowString);
      		//将修改写到数据库
      		modifyMessageResultSet.updateRow();
      		System.out.println("nimadan");
@@ -93,12 +101,12 @@ public class MsgTableManager {
      }
      
      /**
-      * 修改消息
+      * 删除消息
       * @param privilege
       * 权限 管理员：1，普通会员 ：0
       * @param messageID
       * @return
-      * 修改成功返回true，会员无权修改，返回false
+      * 删除成功返回true，会员无权删除，返回false
       * @throws SQLException
      * @throws NamingException 
       */
@@ -207,7 +215,7 @@ public class MsgTableManager {
 	  		try {
 				//conn = jdbcPool.getDataSource().getConnection();
 	  			 conn = jdbcPool.getDataSource();
-			    PreparedStatement pst = conn.prepareStatement("insert into message (messageID,type,content,sender,receiver) values (?,?,?,?,?)");
+			    PreparedStatement pst = conn.prepareStatement("insert into message (messageID,type,content,sender,receiver,createTime,lastModifyTime) values (?,?,?,?,?,?,?)");
 			    String messageID = UUID.randomUUID().toString();// 用来生成号称全球唯一的ID
 			    pst.setString(1,messageID);
 			    pst.setInt(2,0);
@@ -215,6 +223,12 @@ public class MsgTableManager {
 			    pst.setString(3,messageContent);
 			    pst.setString(4,name);
 			    pst.setString(5,null);
+			    String format = "yyyy-MM-dd HH:mm:ss";
+				SimpleDateFormat sdf = new SimpleDateFormat(format);
+				Date now = new Date();
+				String  nowString = sdf.format(now);
+			    pst.setString(6, nowString);
+			    pst.setString(7, nowString);
 			    pst.executeUpdate();
 			    pst.close();
 	  		    }
@@ -266,13 +280,19 @@ public class MsgTableManager {
 	  		try {
 				//conn = jdbcPool.getDataSource().getConnection();
 	  			 conn = jdbcPool.getDataSource();
-			PreparedStatement pst = conn.prepareStatement("insert into message (messageID,type,content,sender,receiver) values (?,?,?,?,?)");
+			PreparedStatement pst = conn.prepareStatement("insert into message (messageID,type,content,sender,receiver,createTime,lastModifyTime) values (?,?,?,?,?,?,?)");
 			String messageID = UUID.randomUUID().toString();// 用来生成号称全球唯一的ID
 			pst.setString(1, messageID);
 			pst.setInt(2,1);
 			pst.setString(3,messageContent);
 			pst.setString(4,name);
 			pst.setString(5,receiverName);
+			String format = "yyyy-MM-dd HH:mm:ss";
+			SimpleDateFormat sdf = new SimpleDateFormat(format);
+			Date now = new Date();
+			String  nowString = sdf.format(now);
+			pst.setString(6,nowString);
+			pst.setString(7,nowString);
 			pst.executeUpdate();
 			pst.close();
 	  		}
@@ -332,7 +352,7 @@ public class MsgTableManager {
 	}
 	public static void main(String args[]) throws ClassNotFoundException, SQLException, NamingException{
 		MsgTableManager test = new MsgTableManager();
-		test.sendInstationMessage("mzs", "niu", "Are you OKAY?");
+		test.sendInstationMessage("mzs", "niu", "Are y ");
 	} 
 	
 	

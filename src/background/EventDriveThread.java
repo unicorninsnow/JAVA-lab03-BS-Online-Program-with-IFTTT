@@ -66,18 +66,9 @@ public class EventDriveThread extends  Thread {
 	public EventDriveThread (String taskID,String name) throws SQLException, NamingException, ClassNotFoundException{
 		this.taskID = taskID;
 	    this.name = name;
-		System.out.println(taskID);
 		taskResultSet = TaskTableManager.getTaskDetails(taskID);
 		
-		Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());//可能一编译就好了
-		final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
-		//Imap收邮件
-		Properties propsImap = System.getProperties();
-		propsImap.setProperty("mail.imap.socketFactory.class", SSL_FACTORY);
-		propsImap.setProperty("mail.imap.socketFactory.fallback", "false");
-		propsImap.setProperty("mail.imap.port", "993");
-		propsImap.setProperty("mail.imap.socketFactory.port", "993");
-		sessionImap = Session.getDefaultInstance(propsImap, null);	
+		
 	}
 
 	public ResultSet getTaskResultSet() {
@@ -150,6 +141,18 @@ public class EventDriveThread extends  Thread {
      * @throws SQLException
      */
     private boolean listenGmailBox() throws SQLException{
+    	    //连接邮箱
+    	    Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());//可能一编译就好了
+		    final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+		    //Imap收邮件
+		    Properties propsImap = System.getProperties();
+		    propsImap.setProperty("mail.imap.socketFactory.class", SSL_FACTORY);
+		    propsImap.setProperty("mail.imap.socketFactory.fallback", "false");
+		    propsImap.setProperty("mail.imap.port", "993");
+		    propsImap.setProperty("mail.imap.socketFactory.port", "993");
+		    sessionImap = Session.getDefaultInstance(propsImap, null);	
+    	
+    	
     	    String srcMailBox = taskResultSet.getString("srcMailBox");
 		    String srcMailPassWd = taskResultSet.getString("srcMailPassWd");
 			URLName urln = new URLName("imap", "imap.gmail.com", 993, null,
@@ -278,7 +281,6 @@ public class EventDriveThread extends  Thread {
 			      Thread.sleep(clockTime);
 			      if(thatType==3) //定时发邮件
 			      {   
-			    	  System.out.println("发邮件");
 			    	  sendGMail();
 			    	  System.out.println("发完");
 			      }
