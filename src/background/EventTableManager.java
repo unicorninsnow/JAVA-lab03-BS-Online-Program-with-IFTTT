@@ -46,6 +46,25 @@ public class EventTableManager {
     	
     }
     
+    /**
+     * 查询已被添加的事件，新建任务时候使用
+     * @param type
+     * 0：THIS   1：THAT
+     * @return
+     * @throws SQLException
+     * @throws NamingException
+     * @throws ClassNotFoundException
+     */
+    public ResultSet getAddedEvent(int type) throws SQLException, NamingException, ClassNotFoundException{
+    	Connection conn = null;
+		//conn = jdbcPool.getDataSource().getConnection();
+    	conn = jdbcPool.getDataSource();
+    	PreparedStatement pstmt = conn.prepareStatement("select * from event where type = ? and isAdded = 1");
+    	pstmt.setInt(1, type);
+    	System.out.println("aaaaaaaaaaaaaaaaaaa");
+    	return pstmt.executeQuery();
+    	
+    }
     
     /**
      * 添加事件，只显示可添加的事件

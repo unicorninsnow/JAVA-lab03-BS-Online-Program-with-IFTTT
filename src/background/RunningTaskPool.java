@@ -46,7 +46,7 @@ public class RunningTaskPool {
 	 * @return
 	 * 返回找到的线程，可能为null
 	 */
-	public Thread getTaskThread(String taskID){
+	private Thread getTaskThread(String taskID){
 		Thread taskThreadTemp = (EventDriveThread)runningTaskThreadPool.get(taskID);
         return taskThreadTemp;
 		

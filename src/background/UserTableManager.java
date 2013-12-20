@@ -399,7 +399,7 @@ public class UserTableManager {
     public static void main(String args[]) throws ClassNotFoundException, SQLException, NamingException, ParseException, JSONException{
     	//Scanner input = new Scanner(System.in);
     	UserTableManager temp =new UserTableManager();
-    	System.out.println(ResultSet2Json.resultSetToJson(temp.lookupUser(0)));
+    	System.out.println(ResultSet2Json.resultSetToJson(temp.getUserDetails("mzs")));
     	
     }
  //注册时候点击邮箱验证
