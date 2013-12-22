@@ -1,0 +1,77 @@
+@CHARSET "utf-8";
+body {
+  padding-top: 50px;
+}
+.dashboard_main{
+	padding: 0px 15px;
+	text-align: left;
+	background-image:linear-gradient(to bottom,#DFDFDF 0,#F3F3F3 100%);
+}
+
+.dashboard_main_title h1,
+.dashboard_main_title .h1{
+	font-size:80px;
+	font-family:Arial;
+	font-weight:bold;
+	padding: 3px;
+}
+
+.dashboard_tasknum{
+	display:block;
+	font-size:30px;
+	text-align: center;
+	vertical-align:buttom;
+}
+
+.dashboard_create_task_button_div{
+	padding-top: 16px;
+	padding-bottom: 7px;
+	text-align:center;
+	
+}
+.dashboard_create_task_button{
+	padding: 3px;
+	font-size:40px;
+	vertical-align:middle;
+}
+.dashboard_nav_tabs{
+	font-size:18px;
+}
+.allTask_Table_Name{
+	text-align: left;
+}
+.allTask_Task_detail_popover{
+	
+	
+}
+.allTask_table_tr{
+	text-align: center;
+}
+.create-Task-Step3{
+	display:block;
+	font-size:148px;
+	
+}
+
+.create-Task-Step4{
+	display:block;
+	font-size:63px;
+	
+}
+
+.create-Task-Step5-email{
+	display:block;
+	font-size:30px;
+	text-align: center;
+	
+}
+.create-Task-Step5-weibo{
+	display:block;
+	font-size:30px;
+	
+}
+.create-Task-Step6{
+	display:block;
+	font-size:148px;
+	
+}
