@@ -6,12 +6,37 @@
  * Modernizr 2.6.1 (Custom Build) | MIT & BSD Build:
  * http://modernizr.com/download/#-canvas-history-input-shiv-cssclasses
  */
+var usernameNow;
+
+
 $(document).ready(function(){
+/*	$.ajax({
+		type:'post',
+		data:{
+		},
+		url:'servletname',
+		success:function (a){
+				
+			if(a != "true"){
+				location.
+			}else{
+				
+			}
+		},
+		error:function (a){
+			
+		}
+	}*/
 	/**/
+
 	updateAllTaskTable();
 		
 		
 });
+
+function isdenglu() {
+	
+}
 
 function getAllTaskList() {
 }

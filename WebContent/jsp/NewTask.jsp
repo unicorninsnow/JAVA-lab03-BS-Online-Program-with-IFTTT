@@ -1,36 +1,23 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
+<% /*检测是否已登录*/ %>
+<%@include file="isLogIn.jsp" %>
+<%String userNameLogIn = (String)session.getAttribute("user"); %>
 <!DOCTYPE HTML>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="description" content="">
-    <meta name="author" content="">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="shortcut icon" href="../bootstrap-3.0.0/assets/ico/favicon.png">
-<title>IFTTT - CreateNewTask</title>
+	<%@include file="PathInclude.jsp" %>
+	<title>IFTTT - CreateNewTask</title>
 
-<!-- Bootstrap -->
-<link href="../bootstrap-3.0.0/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="//cdnjs.bootcss.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="//cdnjs.bootcss.com/ajax/libs/prettify/r224/prettify.css" rel="stylesheet">
+	<link href="../bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+	<link href="../bootstrap-3.0.0/examples/starter-template/starter-template.css" rel="stylesheet" media="screen">
+	<link href="../css/NewTask.css" rel="stylesheet" media="screen">
+	<script type="text/javascript" src="../js/NewTask.js"></script>
+	<script src="../bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"></script>
 
-<!-- <link href="//cdnjs.bootcss.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.min.css" rel="stylesheet">
- --><link href="//cdnjs.bootcss.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css" rel="stylesheet">
-<link href="//cdnjs.bootcss.com/ajax/libs/prettify/r224/prettify.css" rel="stylesheet">
-<link href="../bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" rel="stylesheet"
-	media="screen">
-<link href="../bootstrap-3.0.0/examples/starter-template/starter-template.css" rel="stylesheet"
-	media="screen">
-<link href="../css/NewTask.css" rel="stylesheet" media="screen">
-<script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
-<script type="text/javascript" src="../js/NewTask.js"></script>
-<script src="../bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"></script>
-
-<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!--[if lt IE 9]>
-	      <script src="bootstrap-3.0.0/assets/js/html5shiv.js"></script>
-	      <script src="bootstrap-3.0.0/assets/js/respond.min.js"></script>
-	    <![endif]-->
-	    
-<!-- <style type="text/css">.holderjs-fluid {font-size:16px;font-weight:bold;text-align:center;font-family:sans-serif;border-collapse:collapse;border:0;vertical-align:middle;margin:0}</style>
- --></head>
+</head>
 <body>
 	 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
@@ -41,7 +28,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="dashboard.html">IFTTT</a>
+          <a class="navbar-brand" href="dashboard.jsp">IFTTT</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -80,7 +67,7 @@
 				style="display: none"></span>
 		</div>
 
-		<!-- 选择THIS的类型 -->
+		<!-- éæ©THISçç±»å -->
 		<div class="create-Task-Step1" id="createTaskStep1">
 			<hr>
 			<span>Choose THIS Task:</span>
@@ -102,7 +89,7 @@
 		
 		<div class="create-Task-Step2" id="createTaskStep2">
 		
-			<!-- 在THIS为定时datetime时进行的操作 -->
+			<!-- å¨THISä¸ºå®æ¶datetimeæ¶è¿è¡çæä½ -->
 			<div class="create-Task-Step2-datetime" id="createTaskStep2-datetime">
 				<hr>
 				<div class="container">
@@ -130,7 +117,7 @@
 					        showMeridian: 1
 					    }); */
 						$(".form_datetime").datetimepicker({
-							format : "yyyy-mm-dd  hh:ii",
+							format : "yyyy-mm-dd hh:ii",
 							autoclose : true,
 							todayBtn : true,
 							startDate : "1900-01-01 10:00",
@@ -146,7 +133,7 @@
 			</div>
 			
 			
-			<!-- 在THIS为收到email时进行的操作 -->
+			<!-- å¨THISä¸ºæ¶å°emailæ¶è¿è¡çæä½ -->
 			<div class="create-Task-Step2-email" id="createTaskStep2-email">
 				<hr>
 				<div class="container">
@@ -164,7 +151,7 @@
 				</div>
 			</div>
 			
-			<!-- 在THIS为收到weibo时进行的操作 -->
+			<!-- å¨THISä¸ºæ¶å°weiboæ¶è¿è¡çæä½ -->
 			<div class="create-Task-Step2-weibo" id="createTaskStep2-weibo">
 				<hr>
 				<div class="container">
@@ -183,7 +170,7 @@
 			</div>
 		</div>
 		
-		<!-- 显示THIS的选择 准备选THAT -->
+		<!-- æ¾ç¤ºTHISçéæ© åå¤éTHAT -->
 		<div class="create-Task-Step3" id="createTaskStep3">
 			<hr>
 			if<span style="display: none"></span><a class="THIS_img" id="THIS_Task">
@@ -192,7 +179,7 @@
 				onclick="goToTHAT();">THAT</a>
 		</div>
 		
-		<!-- 选择THAT的类型 -->
+		<!-- éæ©THATçç±»å -->
 		<div class="create-Task-Step4" id="createTaskStep4">
 			<hr>
 			<span>Choose THAT Task:</span>
@@ -210,7 +197,7 @@
 		<div class="create-Task-Step5" id="createTaskStep5">
 				<br>
 				<hr>
-			<!-- 在THAT为发送email时进行的操作 -->
+			<!-- å¨THATä¸ºåéemailæ¶è¿è¡çæä½ -->
 			<div class="create-Task-Step5-email" id="createTaskStep5-email">
 				<div class="container">
 					Email to trigger when Receiving:
@@ -229,7 +216,7 @@
 				</div>
 			</div>
 			
-			<!-- 在THAT为发送weibo时进行的操作 -->
+			<!-- å¨THATä¸ºåéweiboæ¶è¿è¡çæä½ -->
 			<div class="create-Task-Step5-weibo" id="createTaskStep5-weibo">
 				<div class="container">
 					Email to trigger when Receiving:
@@ -249,13 +236,23 @@
 		</div>
 		
 		
-		<!-- 显示最终的Task -->
+		<!-- æ¾ç¤ºæç»çTask -->
 		<div class="create-Task-Step6" id="createTaskStep6">
 			<hr>
 			if<span style="display: none"></span><a class="THIS_img" id="THIS_Task">
 					<img name="THIS_Task_img" src="">
 				</a>then<span style="display: none"></span><a class="THAT_img" id="THAT_Task">
 					<img name="THAT_Task_img" src=""></a>
+		</div>
+		
+		<div class="create-Task-Step7" id="createTaskStep7">
+			<hr>
+			<div class="container">
+				<div class="col-md-4 col-md-offset-4" style="padding-top: 5px;text-align:center;">
+					<button type="button" class="btn btn-lg btn-success button-task-confirm" 
+						onclick="createTask()">Create Task</button>
+				</div>
+			</div>
 		</div>
 		
 	</div>

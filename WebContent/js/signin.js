@@ -107,6 +107,11 @@ function signin(){
 			url:'',
 			success:function (a){
 					
+				if("chenggong"){
+					
+				}else{
+					
+				}
 			},
 			error:function (a){
 				

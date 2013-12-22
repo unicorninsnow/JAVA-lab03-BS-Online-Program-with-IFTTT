@@ -1,72 +1,103 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
+<% /*检测是否已登录*/ %>
+<%@include file="isLogIn.jsp" %>
+<%String userNameLogIn = (String)session.getAttribute("user"); %>
 <!DOCTYPE HTML>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="description" content="">
-    <meta name="author" content="">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="shortcut icon" href="../bootstrap-3.0.0/assets/ico/favicon.png">
-<title>IFTTT - Dashboard</title>
+	<%@include file="PathInclude.jsp" %>
+	<title>IFTTT - Dashboard</title>
+	
+	<link href="//cdnjs.bootcss.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="../bootstrap-3.0.0/examples/starter-template/starter-template.css" rel="stylesheet" media="screen">
+	<link href="../css/dashboard.css" rel="stylesheet" media="screen">
+	<link href="../bwsewell-tablecloth/assets/css/prettify.css" rel="stylesheet" media="screen">
+	<link href="../bwsewell-tablecloth/assets/css/tablecloth.css" rel="stylesheet" media="screen">
+	<link href="../bwsewell-tablecloth/assets/css/bootstrap-tables.css" rel="stylesheet" media="screen">
+	
+	<script type="text/javascript" src="../js/dashboard.js"></script>
+	<script type="text/javascript" src="../bootstrap-3.0.0/js/popover.js"></script>
+	<script type="text/javascript" src="../bootstrap-3.0.0/assets/js/application.js"></script>
+	<script type="text/javascript" src="../bwsewell-tablecloth/assets/js/jquery.tablecloth.js"></script>
+	<script type="text/javascript" src="../bwsewell-tablecloth/assets/js/jquery.tablesorter.js"></script>
+	<script type="text/javascript" src="../bwsewell-tablecloth/assets/js/jquery.metadata.js"></script>
 
-<!-- Bootstrap -->
-<link href="../bootstrap-3.0.0/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="//cdnjs.bootcss.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css" rel="stylesheet">
-<link href="../bootstrap-3.0.0/examples/starter-template/starter-template.css" rel="stylesheet" media="screen">
-<link href="../css/dashboard.css" rel="stylesheet" media="screen">
-<link href="../bwsewell-tablecloth/assets/css/prettify.css" rel="stylesheet" media="screen">
-<link href="../bwsewell-tablecloth/assets/css/tablecloth.css" rel="stylesheet" media="screen">
-<link href="../bwsewell-tablecloth/assets/css/bootstrap-tables.css" rel="stylesheet" media="screen">
-
-<script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
-<script type="text/javascript" src="../js/dashboard.js"></script>
-<script type="text/javascript" src="../bootstrap-3.0.0/dist/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../bootstrap-3.0.0/js/popover.js"></script>
-<script type="text/javascript" src="../bootstrap-3.0.0/assets/js/application.js"></script>
-<script type="text/javascript" src="../bwsewell-tablecloth/assets/js/jquery.tablecloth.js"></script>
-<script type="text/javascript" src="../bwsewell-tablecloth/assets/js/jquery.tablesorter.js"></script>
-<script type="text/javascript" src="../bwsewell-tablecloth/assets/js/jquery.metadata.js"></script>
-
-<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!--[if lt IE 9]>
-	      <script src="bootstrap-3.0.0/assets/js/html5shiv.js"></script>
-	      <script src="bootstrap-3.0.0/assets/js/respond.min.js"></script>
-	    <![endif]-->
-	    
-<!-- <style type="text/css">.holderjs-fluid {font-size:16px;font-weight:bold;text-align:center;font-family:sans-serif;border-collapse:collapse;border:0;vertical-align:middle;margin:0}</style>
- --></head>
+</head>
+ 
+ 
 <body>
 	 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="dashboard.html">IFTTT</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div><!--/.nav-collapse -->
+      	<div class="col-xs-14 col-md-9">
+	        <div class="navbar-header">
+	          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	            <span class="sr-only">Toggle navigation</span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	          </button>
+	          <a class="navbar-brand" href="dashboard.jsp">IFTTT</a>
+	        </div>
+	        <div class="navbar-collapse collapse">
+	          <ul class="nav navbar-nav">
+	            <li class="active"><a href="#">Home</a></li>
+	            <li><a href="#about">About</a></li>
+	            <li><a href="#contact">Contact</a></li>
+	            <li class="dropdown">
+	              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+	              <ul class="dropdown-menu">
+	                <li><a href="#">Action</a></li>
+	                <li><a href="#">Another action</a></li>
+	                <li><a href="#">Something else here</a></li>
+	                <li class="divider"></li>
+	                <li class="dropdown-header">Nav header</li>
+	                <li><a href="#">Separated link</a></li>
+	                <li><a href="#">One more separated link</a></li>
+	              </ul>
+	            </li>
+	          </ul>
+	        </div><!--/.nav-collapse -->
+	       </div>
+		<div class="col-xs-4 col-sm-3 userInfoButton">
+			<div class="dropdown userInfoButtonDropdownMenu">
+				<a id="userInfoDropdownMenu" class="userInfoButtonDropdown" data-toggle="dropdown" data-target="#"
+					href="/page.html"> <%=userNameLogIn%> <span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="userInfoDropdownMenu">
+					<li role="presentation"><a role="menuitem" tabindex="-1"
+						href="#">Action</a></li>
+					<li role="presentation"><a role="menuitem" tabindex="-1"
+						href="#">Another action</a></li>
+					<li role="presentation"><a role="menuitem" tabindex="-1"
+						href="#">Something else here</a></li>
+					<li role="presentation" class="divider"></li>
+					<li role="presentation"><a role="menuitem" tabindex="-1"
+						href="#">Separated link</a></li>
+					
+				</ul>
+
+
+			</div>
+			
+			<!-- 
+			<div class="dropdown userInfoButtonDropdownMenu">
+				<button class="btn dropdown-toggle sr-only" type="button"
+					id="dropdownMenu1" data-toggle="dropdown">
+					Dropdown <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				</ul>
+			</div> -->
+
+
+
+			<script>
+				$('.dropdown-toggle').dropdown();
+			</script>
+		</div>
       </div>
-    </div>
+	</div>
     
 	<div class="dashboard_main">
 		<div class="container">
@@ -102,7 +133,7 @@
 			<div class="col-xs-4 col-sm-3">
 				
 				<div class="dashboard_create_task_button_div" >
-					<a type="button" class="btn btn-lg btn-success dashboard_create_task_button" href="NewTask.html">New Task!</a>
+					<a type="button" class="btn btn-lg btn-success dashboard_create_task_button" href="NewTask.jsp">New Task!</a>
 				</div>
 				<div class="dashboard_tasknum">
 					<span id="TaskNowNum">0</span> Tasks in Total<br>
@@ -115,7 +146,7 @@
 	<div class="dashboard_tab_div">
 		<div class="container ">
 			<div id="myTabContent" class="tab-content">
-				<!-- 所有任务的列表 -->
+				<!-- ææä»»å¡çåè¡¨ -->
 				<div class="tab-pane fade active in" id="allTask">
 					<div class="panel panel-default" id="allTask_panel">
 						<!-- Default panel contents -->
@@ -182,10 +213,10 @@
 								
 							</table>
 							<script>
-								// 无参初始化
+								// æ ååå§å
 								$("table").tablecloth();
 								 
-								// 或者含参初始化
+								// æèå«ååå§å
 								$("table").tablecloth({
 								  theme: "paper",
 								  bordered: false,
@@ -201,7 +232,7 @@
 					</div>
 				</div>
 				
-				<!-- 正在运行的任务的列表 -->
+				<!-- æ­£å¨è¿è¡çä»»å¡çåè¡¨ -->
 				<div class="tab-pane fade" id="runTask">
 					<div class="panel panel-default" id="runTask_panel">
 						<!-- Default panel contents -->
@@ -260,7 +291,7 @@
 					</div>
 				</div>
 				
-				<!-- 所有消息的列表 -->
+				<!-- æææ¶æ¯çåè¡¨ -->
 				<div class="tab-pane fade" id="messages">
 					<p>Etsy mixtape wayfarers, ethical wes anderson tofu before
 						they sold out mcsweeney's organic lomo retro fanny pack lo-fi

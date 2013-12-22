@@ -47,16 +47,28 @@ body {
 .allTask_table_tr{
 	text-align: center;
 }
-.create-Task-Step3{
-	display:block;
-	font-size:148px;
-	
+.userInfoButton{
+	padding:5px;
+	font-size:25px;
+	color:white;
+	text-align:center;
+}
+.userInfoButtonDropdown{
+	font-size:25px;
+	color:white;
+	text-align:center;
+}
+.userInfoButtonDropdown{
+	font-size:25px;
+	color:white;
+	text-align:center;
 }
 
 .create-Task-Step4{
+	padding:5px;
 	display:block;
 	font-size:63px;
-	
+	vertical-align:middle;
 }
 
 .create-Task-Step5-email{

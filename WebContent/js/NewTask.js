@@ -9,10 +9,10 @@
 
 
 var THIS_TYPE;
+var THAT_TYPE;
 var THIS_datetime;
 var THIS_email;
 var THIS_weibo;
-var THAT_TYPE;
 var THAT_email_Dst_Box;
 var THAT_email_Src_Box;
 var THAT_email_Src_PWd;
@@ -28,6 +28,7 @@ $(document).ready(function(){
 	$("#createTaskStep5-email").hide();
 	$("#createTaskStep5-weibo").hide();
 	$("#createTaskStep6").hide();
+	$("#createTaskStep7").hide();
 });
 
 function goToTHIS() {
@@ -40,6 +41,7 @@ function goToTHIS() {
 	$("#createTaskStep5-email").hide();
 	$("#createTaskStep5-weibo").hide();
 	$("#createTaskStep6").hide();
+	$("#createTaskStep7").hide();
 	$("html,body").animate({scrollTop:($("#createTaskStep1").offset().top - 50)},"slow");
 //	scrollTo(($("#createTaskStep1").offset().top),($("#createTaskStep1").offset().left));
 //	$body.animate({scrollTop: $('#createTaskStep1').offset()}, 1000);
@@ -85,6 +87,7 @@ function chooseTHIS(thistype) {
 	$("#createTaskStep5-email").hide();
 	$("#createTaskStep5-weibo").hide();
 	$("#createTaskStep6").hide();
+	$("#createTaskStep7").hide();
 }
 
 
@@ -108,6 +111,7 @@ function createTrigger() {
 	$("#createTaskStep5-email").hide();
 	$("#createTaskStep5-weibo").hide();
 	$("#createTaskStep6").hide();
+	$("#createTaskStep7").hide();
 	
 	$("html,body").animate({scrollTop:($("#createTaskStep3").offset().top - 50)},"slow");
 }
@@ -117,6 +121,7 @@ function goToTHAT() {
 	$("#createTaskStep5-email").hide();
 	$("#createTaskStep5-weibo").hide();
 	$("#createTaskStep6").hide();
+	$("#createTaskStep7").hide();
 	$("html,body").animate({scrollTop:($("#createTaskStep4").offset().top - 50)},"slow");
 }
 
@@ -143,6 +148,7 @@ function chooseTHAT(thattype) {
 	}
 	
 	$("#createTaskStep6").hide();
+	$("#createTaskStep7").hide();
 
 }
 
@@ -162,6 +168,7 @@ function createAction() {
 		break;
 	}
 	$("#createTaskStep6").slideDown("slow");
+	$("#createTaskStep7").slideDown("slow");
 	$("html,body").animate({scrollTop:($("#createTaskStep6").offset().top - 50)},"slow");
 }
 
