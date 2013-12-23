@@ -21,77 +21,118 @@
 <body>
 	 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="dashboard.jsp">IFTTT</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div><!--/.nav-collapse -->
+      	<div class="col-xs-14 col-md-9">
+	        <div class="navbar-header">
+	          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	            <span class="sr-only">Toggle navigation</span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	          </button>
+	          <a class="navbar-brand" href="dashboard.jsp">IFTTT</a>
+	        </div>
+	        <div class="navbar-collapse collapse">
+	          <ul class="nav navbar-nav">
+	            <li class="active"><a href="#">Home</a></li>
+	            <li><a href="#about">About</a></li>
+	            <li><a href="#contact">Contact</a></li>
+	            <li class="dropdown">
+	              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+	              <ul class="dropdown-menu">
+	                <li><a href="#">Action</a></li>
+	                <li><a href="#">Another action</a></li>
+	                <li><a href="#">Something else here</a></li>
+	                <li class="divider"></li>
+	                <li class="dropdown-header">Nav header</li>
+	                <li><a  href="#">Separated link</a></li>
+	                <li><a href="#">One more separated link</a></li>
+	              </ul>
+	            </li>
+	          </ul>
+	        </div><!--/.nav-collapse -->
+	       </div>
+		<div class="col-xs-4 col-sm-3 userInfoButton">
+			<div class="dropdown userInfoButtonDropdownMenu">
+				<a id="userInfoDropdownMenu" class="userInfoButtonDropdown" data-toggle="dropdown" data-target="#"
+					href="/page.html"><%=userNameLogIn%>
+				</a>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="userInfoDropdownMenu">
+					<li role="presentation"><a role="menuitem" tabindex="-1"
+						href="#">Action</a></li>
+					<li role="presentation"><a role="menuitem" tabindex="-1"
+						href="#">Another action</a></li>
+					<li role="presentation"><a role="menuitem" tabindex="-1"
+						href="#">Something else here</a></li>
+					<li role="presentation" class="divider"></li>
+					<li role="presentation"><a role="menuitem" tabindex="-1"
+						href="#">Separated link</a></li>
+					
+				</ul>
+
+
+			</div>
+			
+			<!-- 
+			<div class="dropdown userInfoButtonDropdownMenu">
+				<button class="btn dropdown-toggle sr-only" type="button"
+					id="dropdownMenu1" data-toggle="dropdown">
+					Dropdown <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				</ul>
+			</div> -->
+
+
+
+			<script>
+				$('.dropdown-toggle').dropdown();
+			</script>
+		</div>
       </div>
-    </div>
+	</div>
     
 	<div class="create-Task-info">
 		<div class="container create-Task-info_title">
 			<h1>New Task!</h1>
 		</div>
-		<br>
-		<hr>
+		<br/>
+		<hr/>
 	</div>
 
 	<div class="create-Task">
+	
+		<!-- createTask Step0 显示 提示选择信息 -->
 		<div class="create-Task-Step0" id="createTaskStep0">
-			if<span style="display: none"></span><a href="#"
+			if<span style="display: none"></span><a href="#" 
 				onclick="goToTHIS();">THIS</a>then<span style="display: none"></span>THAT<span
 				style="display: none"></span>
 		</div>
 
-		<!-- éæ©THISçç±»å -->
+		<!-- createTask Step1  选择THIS Trigger -->
+		<!-- 0表示定时  1表示email  2表示weibo -->
 		<div class="create-Task-Step1" id="createTaskStep1">
-			<hr>
+			<hr/>
 			<span>Choose THIS Task:</span>
 			<div>
-				<a class="THIS_img" id="THIS_Task_datetime" onclick="chooseTHIS(1)">
+				<a class="THIS_img" id="THIS_Task_datetime" onclick="chooseTHIS(0)">
 					<img src="../images/datetime.png">
 				</a>
-				<a class="THIS_img" id="THIS_Task_email" onclick="chooseTHIS(2)">
+				<a class="THIS_img" id="THIS_Task_email" onclick="chooseTHIS(1)">
 					<img src="../images/email.png">
 				</a>
-				<a class="THIS_img" id="THIS_Task_weibo" onclick="chooseTHIS(3)">
+				<a class="THIS_img" id="THIS_Task_weibo" onclick="chooseTHIS(2)">
 					<img src="../images/weibo.png">
 				</a>
-					
-				
 			</div>
 		</div>
 		
 		
+		<!-- createTask Step2  进行Trigger详细信息的填写 -->
 		<div class="create-Task-Step2" id="createTaskStep2">
 		
-			<!-- å¨THISä¸ºå®æ¶datetimeæ¶è¿è¡çæä½ -->
+			<!-- 当Trigger为定时任务时 显示的Trigger详细输入体 -->
 			<div class="create-Task-Step2-datetime" id="createTaskStep2-datetime">
-				<hr>
+				<hr/>
 				<div class="container">
 					Date and Time to do Task:
 				</div>
@@ -132,16 +173,17 @@
 				</div>
 			</div>
 			
-			
-			<!-- å¨THISä¸ºæ¶å°emailæ¶è¿è¡çæä½ -->
+			<!-- 当Trigger为监听邮箱时 显示的Trigger详细输入体 -->
+			<!-- 此处如果Action也采用邮件则默认用监听的邮箱发邮件 即不显示发时的源邮箱 -->
 			<div class="create-Task-Step2-email" id="createTaskStep2-email">
-				<hr>
+				<hr/>
 				<div class="container">
 					Email to trigger when Receiving:
 				</div>
 				<div class="container">
 					<form class="form-horizontal">
-						<input class="input-xlarge" id="emailRcvdText" size="16" type="text" placeholder="RcvdMailBox"> 
+						<input class="input-xlarge" id="emailRcvdBox" size="16" type="text" placeholder="RcvdMailBox"><br/>
+						<input class="input-xlarge" id="emailRcvdPassWd" size="16" type="password" placeholder="RcvdMailPassword"> 
 						
 					</form>
 					<div class="col-md-4 col-md-offset-4" style="padding-top: 5px;text-align:center;">
@@ -151,15 +193,17 @@
 				</div>
 			</div>
 			
-			<!-- å¨THISä¸ºæ¶å°weiboæ¶è¿è¡çæä½ -->
+			<!-- 当Trigger为监听微博时 显示的Trigger详细输入体 -->
 			<div class="create-Task-Step2-weibo" id="createTaskStep2-weibo">
-				<hr>
+				<hr/>
 				<div class="container">
 					Weibo to trigger when Receiving:
 				</div>
 				<div class="container">
 					<form class="form-horizontal">
-						<input class="input-xlarge" id="weiboRcvdIDText" size="16" type="text" placeholder="RcvdWeiboID"> 
+						<input class="input-xlarge" id="weiboRcvdIDID" size="16" type="text" placeholder="RcvdWeiboID"><br/>
+						<input class="input-xlarge" id="weiboRcvdIDPassWd" size="16" type="password" placeholder="RcvdWeiboPassword"><br/>
+						<input class="input-xlarge" id="weiboRcvdCheckCon" size="16" type="password" placeholder="RcvdWeiboCheckContent"> 
 						
 					</form>
 					<div class="col-md-4 col-md-offset-4" style="padding-top: 5px;text-align:center;">
@@ -170,44 +214,61 @@
 			</div>
 		</div>
 		
-		<!-- æ¾ç¤ºTHISçéæ© åå¤éTHAT -->
+		
+		<!-- createTask Step3 显示已选好的THIS Trigger  并提示用户前往选择THAT的div -->
 		<div class="create-Task-Step3" id="createTaskStep3">
-			<hr>
+			<hr/>
 			if<span style="display: none"></span><a class="THIS_img" id="THIS_Task">
 					<img name="THIS_Task_img" src="">
-				</a>then<span style="display: none"></span></span><a href="#"
+				</a>then<span style="display: none"></span><a href="#"
 				onclick="goToTHAT();">THAT</a>
 		</div>
 		
-		<!-- éæ©THATçç±»å -->
+		
+		<!-- createTask Step4 选择THAT Action -->
 		<div class="create-Task-Step4" id="createTaskStep4">
-			<hr>
+			<hr/>
 			<span>Choose THAT Task:</span>
 			<div>
-				<a class="THIS_img" id="THAT_Task_email" onclick="chooseTHAT(1)">
+				<a class="THIS_img" id="THAT_Task_email" onclick="chooseTHAT(3)">
 					<img src="../images/email.png">
 				</a>
-				<a class="THIS_img" id="THAT_Task_weibo" onclick="chooseTHAT(2)">
+				<a class="THIS_img" id="THAT_Task_weibo" onclick="chooseTHAT(4)">
 					<img src="../images/weibo.png">
 				</a>
 			</div>
 		</div>
 		
 		
+		<!-- createTask Step5  进行Action详细信息的填写 -->
 		<div class="create-Task-Step5" id="createTaskStep5">
-				<br>
-				<hr>
-			<!-- å¨THATä¸ºåéemailæ¶è¿è¡çæä½ -->
+		
+			<!-- 当Action为发邮件时 显示的Action详细输入体 -->
 			<div class="create-Task-Step5-email" id="createTaskStep5-email">
+				<hr/>
 				<div class="container">
-					Email to trigger when Receiving:
+					Send Email:
 				</div>
 				<div class="container">
 					<form class="form-horizontal">
-						<input class="input-xlarge" id="emailSendDstText" size="16" type="text" placeholder="SendDstMailBox"></br>
-						<input class="input-xlarge" id="emailSendSrcText" size="16" type="text" placeholder="SendSrcMailBox"></br>
-						<input class="input-xlarge" id="emailSendSrcPasswdText" size="16" type="password" placeholder="SendSrcMailPassword"> 
+						<div style="display: block; margin:0px auto;vertical-align: middle;">
+							<input class="input-xlarge " 
+								id="emailSendDstBox" size="16" type="text" placeholder="SendDstMailBox" ></input>
+						</div>
+						<div style="display: block; margin:0px auto;vertical-align: middle;">
+							<input class="input-xlarge " style="display: block;"
+								id="emailSendSrcBox" size="16" type="text" placeholder="SendSrcMailBox"></input>
+						</div>	
+						<div style="display: block; margin:0px auto;vertical-align: middle;">
+							<input class="input-xlarge " style="display: block;"
+								id="emailSendSrcPassWd" size="16" type="password" placeholder="SendSrcMailPassword" ></input>
+						</div>
+						<div style="display: block; margin:0px auto;vertical-align: middle;">
+							<input class="input-xlarge " style="display: block;"
+								id="emailSendSubject" size="16" type="text" placeholder="SendSrcMailSubject" ></input>
+						</div>
 						
+						<textarea id="emailSendContent" rows="4" cols="20" placeholder="SendWeiboPassword"></textarea>
 					</form>
 					<div class="col-md-4 col-md-offset-4" style="padding-top: 5px;text-align:center;">
 						<button type="button" class="btn btn-lg btn-success button-task-confirm" 
@@ -216,16 +277,17 @@
 				</div>
 			</div>
 			
-			<!-- å¨THATä¸ºåéweiboæ¶è¿è¡çæä½ -->
+			<!-- 当Action为发微博时 显示的Action详细输入体 -->
 			<div class="create-Task-Step5-weibo" id="createTaskStep5-weibo">
+				<hr/>
 				<div class="container">
-					Email to trigger when Receiving:
+					Update Weibo:
 				</div>
 				<div class="container">
 					<form class="form-horizontal">
-						<input class="input-xlarge" id="weiboSendIDText" size="16" type="text" placeholder="SendWeiboID"></br>
-						<input class="input-xlarge" id="weiboSendPassWd" size="16" type="password" placeholder="SendWeiboPassword"> 
-						
+						<input class="input-xlarge" id="weiboSendID" size="16" type="text" placeholder="SendWeiboID"><br/>
+						<input class="input-xlarge" id="weiboSendPassWd" size="16" type="password" placeholder="SendWeiboPassword"> <br/>
+						<textarea id="weiboSendContent" rows="4" cols="20" placeholder="SendWeiboPassword"></textarea>
 					</form>
 					<div class="col-md-4 col-md-offset-4" style="padding-top: 5px;text-align:center;">
 						<button type="button" class="btn btn-lg btn-success button-task-confirm" 
@@ -236,9 +298,9 @@
 		</div>
 		
 		
-		<!-- æ¾ç¤ºæç»çTask -->
+		<!-- createTask Step6   显示已选好的Trigger 和 Action -->
 		<div class="create-Task-Step6" id="createTaskStep6">
-			<hr>
+			<hr/>
 			if<span style="display: none"></span><a class="THIS_img" id="THIS_Task">
 					<img name="THIS_Task_img" src="">
 				</a>then<span style="display: none"></span><a class="THAT_img" id="THAT_Task">
@@ -246,42 +308,44 @@
 		</div>
 		
 		<div class="create-Task-Step7" id="createTaskStep7">
-			<hr>
-			<div class="container">
+			<hr/>
+			<div class="container" style="text-align: center;font-size: 40px;">
+				Give the Task a Name:<br/>
+				<input class="input-xlarge" id="taskNameText" size="16" type="text" placeholder="TaskName" style="font-size: 30px;">
 				<div class="col-md-4 col-md-offset-4" style="padding-top: 5px;text-align:center;">
 					<button type="button" class="btn btn-lg btn-success button-task-confirm" 
-						onclick="createTask()">Create Task</button>
+						onclick="createNewTask()">Create Task</button>
 				</div>
 			</div>
 		</div>
 		
 	</div>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
 
 
 </body>

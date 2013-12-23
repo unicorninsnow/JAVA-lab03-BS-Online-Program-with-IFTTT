@@ -62,7 +62,7 @@
 		<div class="col-xs-4 col-sm-3 userInfoButton">
 			<div class="dropdown userInfoButtonDropdownMenu">
 				<a id="userInfoDropdownMenu" class="userInfoButtonDropdown" data-toggle="dropdown" data-target="#"
-					href="/page.html"> <%=userNameLogIn%> <span class="caret"></span>
+					href="/page.html"><%=userNameLogIn%>
 				</a>
 				<ul class="dropdown-menu" role="menu" aria-labelledby="userInfoDropdownMenu">
 					<li role="presentation"><a role="menuitem" tabindex="-1"

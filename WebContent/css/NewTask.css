@@ -2,6 +2,23 @@
 body {
   padding-top: 50px;
 }
+.userInfoButton{
+	padding:5px;
+	font-size:25px;
+	color:white;
+	text-align:center;
+}
+.userInfoButtonDropdown{
+	font-size:25px;
+	color:white;
+	text-align:center;
+}
+.userInfoButtonDropdown{
+	font-size:25px;
+	color:white;
+	text-align:center;
+}
+
 .create-Task-info {
 	padding: 0px 15px;
  	text-align: left;
@@ -92,6 +109,12 @@ body {
 }
 .create-Task-Step7{
 	display:block;
-	font-size:148px;
-	
+	font-size:63px;
+}
+.creatTask-input-center-block{
+	padding:2px;
+	display:block;
+	text-align:center;
+	vertical-align:middle;
+	font-size:20px;
 }

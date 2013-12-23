@@ -7,18 +7,35 @@
  * http://modernizr.com/download/#-canvas-history-input-shiv-cssclasses
  */
 
+var usernameNow;
+
+var taskJSONInfo;
+
+var taskName;
 
 var THIS_TYPE;
+var thisDetail;
+var taskDatetime;
+var srcEmailBox;
+var srcEmailPassWd;
+var listenWeiboID;
+var listenWeiboPassWd;
+var listenWeiboCheckCon;
+
+
 var THAT_TYPE;
-var THIS_datetime;
-var THIS_email;
-var THIS_weibo;
-var THAT_email_Dst_Box;
-var THAT_email_Src_Box;
-var THAT_email_Src_PWd;
+var thatDetail;
+var dstEmailBox;
+var updateWeiboID;
+var updateWeiboPassWd;
+
+var EmailSubject;
+var taskContent;
 
 
 $(document).ready(function(){
+	usernameNow=$("#userInfoDropdownMenu").html();
+	
 	$("#createTaskStep1").hide();
 	$("#createTaskStep2-datetime").hide();
 	$("#createTaskStep2-email").hide();
@@ -31,6 +48,39 @@ $(document).ready(function(){
 	$("#createTaskStep7").hide();
 });
 
+/**
+ * 检测邮箱是否合法
+ * @param email
+ * @param infotxt
+ * @returns {Boolean}
+ */
+function isEmailValid(emailId) {
+	var email = $("#"+emailId).val();
+	apos = email.indexOf("@");
+	dotpos = email.lastIndexOf(".");
+	if (apos < 1 || dotpos - apos < 2) {
+		alert("Illegal Email Address");
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function isNotEmpty(inputtextId, infotxt) {
+	var inputtext = $("#" + inputtextId).val();
+	if (inputtext == null || inputtext == "") {
+		alert(infotxt + " can't be empty!");
+		return false;
+	} else {
+		
+		return true;
+	}
+}
+
+
+/**
+ * 进行显示THIS的Trigger Type选择div
+ */
 function goToTHIS() {
 	$("#createTaskStep1").slideDown("slow");
 	$("#createTaskStep2-datetime").hide();
@@ -43,45 +93,42 @@ function goToTHIS() {
 	$("#createTaskStep6").hide();
 	$("#createTaskStep7").hide();
 	$("html,body").animate({scrollTop:($("#createTaskStep1").offset().top - 50)},"slow");
-//	scrollTo(($("#createTaskStep1").offset().top),($("#createTaskStep1").offset().left));
-//	$body.animate({scrollTop: $('#createTaskStep1').offset()}, 1000);
-//	show_and_scroll_to("#createTaskStep1",function(){
-//		dim_out("#createTaskStep0");
-//		});
-
 }
 
+/**
+ * 选择THIS的Trigger的种类Type
+ * @param thistype 0表示定时任务 1表示监听邮箱 2表示监听微博
+ */
 function chooseTHIS(thistype) {
 	THIS_TYPE = thistype;
 	switch (thistype) {
-	case 1:
+	case 0:
 		$("#createTaskStep2-datetime").slideDown("slow");
-		$("html,body").animate({scrollTop:($("#createTaskStep2").offset().top - 50)},"slow");
 		$("#createTaskStep2-email").hide();
-		$("#createTaskStep2-weibo").hide();//		$("#THIS_Task_img").attr("src","images/datetime.png");
+		$("#createTaskStep2-weibo").hide();
+		$("html,body").animate({scrollTop:($("#createTaskStep2").offset().top - 50)},"slow");
+		// 更新相应的Trigger图片
 		$("img[name$='THIS_Task_img']").attr("src","../images/datetime.png");
 		break;
-	case 2:
+	case 1:
 		$("#createTaskStep2-email").slideDown("slow");
-		$("html,body").animate({scrollTop:($("#createTaskStep2").offset().top - 50)},"slow");
 		$("#createTaskStep2-datetime").hide();
 		$("#createTaskStep2-weibo").hide();
-//		$("#THIS_Task_img").attr("src","images/email.png");
+		$("html,body").animate({scrollTop:($("#createTaskStep2").offset().top - 50)},"slow");
+		// 更新相应的Trigger图片
 		$("img[name$='THIS_Task_img']").attr("src","../images/email.png");
 		break;
-	case 3:
+	case 2:
 		$("#createTaskStep2-weibo").slideDown("slow");
-		$("html,body").animate({scrollTop:($("#createTaskStep2").offset().top - 50)},"slow");
 		$("#createTaskStep2-datetime").hide();
 		$("#createTaskStep2-email").hide();
-//		$("#THIS_Task_img").attr("src","images/weibo.png");
+		$("html,body").animate({scrollTop:($("#createTaskStep2").offset().top - 50)},"slow");
+		// 更新相应的Trigger图片
 		$("img[name$='THIS_Task_img']").attr("src","../images/weibo.png");
 		break;
-
 	default:
 		break;
 	}
-	
 	$("#createTaskStep3").hide();
 	$("#createTaskStep4").hide();
 	$("#createTaskStep5-email").hide();
@@ -90,17 +137,49 @@ function chooseTHIS(thistype) {
 	$("#createTaskStep7").hide();
 }
 
-
+/**
+ * 确认Trigger的种类和相关信息
+ */
 function createTrigger() {
 	switch (THIS_TYPE) {
+	case 0:
+		if(!isNotEmpty("datetimeText", "DateTime")){
+			$("#datetimeText").focus();
+			return;
+		}else {
+			taskDatetime=$("#datetimeText").val();
+		}
+		break;
 	case 1:
-		THIS_datetime=$("#datetimeText").val();
+		if(!isNotEmpty("emailRcvdBox", "Receive Email")){
+			$("#emailRcvdBox").focus();
+			return;
+		}else if (!isNotEmpty("emailRcvdPassWd", "Email password")){
+			$("#emailRcvdPassWd").focus();
+			return;
+		}else if (!isEmailValid("emailRcvdBox")){
+			$("#emailRcvdBox").focus();
+			return;
+		}else {
+			srcEmailBox=$("#emailRcvdBox").val();
+			srcEmailPassWd=$("#emailRcvdPassWd").val();
+		}
 		break;
 	case 2:
-		THIS_email=$("#emailRcvdText").val();
-		break;
-	case 3:
-		THIS_weibo=$("#weiboRcvdIDText").val();
+		if(!isNotEmpty("weiboRcvdIDID", "WeiboID")){
+			$("#weiboRcvdIDID").focus();
+			return;
+		}else if (!isNotEmpty("weiboRcvdIDPassWd", "Weibo password")){
+			$("#weiboRcvdIDPassWd").focus();
+			return;
+		}else if (!isNotEmpty("weiboRcvdCheckCon", "weibo Check Content")){
+			$("#weiboRcvdCheckCon").focus();
+			return;
+		}else {
+			listenWeiboID=$("#weiboRcvdIDID").val();
+			listenWeiboPassWd=$("#weiboRcvdIDPassWd").val();
+			listenWeiboCheckCon=$("#weiboRcvdCheckCon").val();
+		}
 		break;
 
 	default:
@@ -112,9 +191,12 @@ function createTrigger() {
 	$("#createTaskStep5-weibo").hide();
 	$("#createTaskStep6").hide();
 	$("#createTaskStep7").hide();
-	
 	$("html,body").animate({scrollTop:($("#createTaskStep3").offset().top - 50)},"slow");
 }
+
+/**
+ * 进行显示THAT的Action Type选择div
+ */
 
 function goToTHAT() {
 	$("#createTaskStep4").slideDown("slow");
@@ -125,43 +207,121 @@ function goToTHAT() {
 	$("html,body").animate({scrollTop:($("#createTaskStep4").offset().top - 50)},"slow");
 }
 
+/**
+ * 选择THAT的Action的种类Type
+ * @param thattype 3表示发邮件 2表示发微博
+ */
+
 function chooseTHAT(thattype) {
 	THAT_TYPE = thattype;
 	switch (thattype) {
-	case 1:
+	case 3:
+		//根据Trigger的类型决定是否显示SendSrcMail的输入
+		if(THIS_TYPE == 1){
+			//如果Trigger是邮箱 则不显示 即用监听的邮箱发邮件
+			$("#emailSendSrcBox").hide();
+			$("#emailSendSrcPassWd").hide();
+		}else{
+			//如果Trigger不是邮箱 则显示
+			$("#emailSendSrcBox").show();
+			$("#emailSendSrcPassWd").show();
+		}
+			
 		$("#createTaskStep5-email").slideDown("slow");
 		$("#createTaskStep5-weibo").hide();
 		$("html,body").animate({scrollTop:($("#createTaskStep5").offset().top - 50)},"slow");
-//		$("#THAT_Task_img").attr("src","images/email.png");
+		// 更新相应的Action图片
 		$("img[name$='THAT_Task_img']").attr("src","../images/email.png");
 		break;
-	case 2:
+	case 4:
 		$("#createTaskStep5-weibo").slideDown("slow");
 		$("#createTaskStep5-email").hide();
 		$("html,body").animate({scrollTop:($("#createTaskStep5").offset().top - 50)},"slow");
-//		$("#THAT_Task_img").attr("src","images/weibo.png");
+		// 更新相应的Action图片
 		$("img[name$='THAT_Task_img']").attr("src","../images/weibo.png");
 		break;
-
 	default:
 		break;
 	}
-	
 	$("#createTaskStep6").hide();
 	$("#createTaskStep7").hide();
-
 }
 
+/*
+ * 确认Action的种类和相关信息
+ */
 function createAction() {
 	switch (THAT_TYPE) {
-	case 1:
-		THAT_email_Dst_Box=$("#emailSendDstText").val();
-		THAT_email_Src_Box=$("#emailSendSrcText").val();
-		THAT_email_Src_PWd=$("#emailSendSrcPasswdText").val();
+	case 3:
+		//验证DstMail的信息
+		if(!isNotEmpty("emailSendDstBox", "Send Dst Email")){
+			$("#emailSendDstBox").focus();
+			return;
+		}else if (!isEmailValid("emailSendDstBox")){
+			$("#emailSendDstBox").focus();
+			return;
+		}else{
+			dstEmailBox=$("#emailSendDstBox").val();
+		}
+		
+		//验证邮件标题和内容的信息
+		if(!isNotEmpty("emailSendSubject", "Email Subject")){
+			$("#emailSendSubject").focus();
+			return;
+		}else if(!isNotEmpty("emailSendContent", "Email Content")){
+			$("#emailSendContent").focus();
+			return;
+		}else{
+			EmailSubject=$("#emailSendSubject").val();
+			taskContent=$("#emailSendContent").val();
+		}
+		
+		//依据Trigger类型的不同 分别验证SendSrcMail的信息
+		if(THIS_TYPE == 1){
+			//如果Trigger是邮箱 则不显示 即用监听的邮箱发邮件
+			if(!isNotEmpty("emailRcvdBox", "Send Src Email")){
+				$("#emailRcvdBox").focus();
+				return;
+			}else if (!isNotEmpty("emailRcvdPassWd", "Email password")){
+				$("#emailRcvdPassWd").focus();
+				return;
+			}else if (!isEmailValid("emailRcvdBox")){
+				$("#emailRcvdBox").focus();
+				return;
+			}
+		}else{
+			//如果Trigger不是邮箱 则用新的发送邮箱
+			if(!isNotEmpty("emailSendSrcBox", "Send Src send Email")){
+				$("#emailSendSrcBox").focus();
+				return;
+			}else if (!isNotEmpty("emailSendSrcPassWd", "Email password")){
+				$("#emailSendSrcPassWd").focus();
+				return;
+			}else if (!isEmailValid("emailSendSrcBox")){
+				$("#emailSendSrcBox").focus();
+				return;
+			}else{
+				srcEmailBox=$("#emailSendSrcBox").val();
+				srcEmailPassWd=$("#emailSendSrcPassWd").val();
+			}
+		}
+		
 		break;
-	case 2:
-		THAT_weibo_ID=$("#weiboSendIDText").val();
-		THAT_weibo_PWd=$("#weiboSendPassWd").val();
+	case 4:
+		if(!isNotEmpty("weiboSendID", "WeiboID")){
+			$("#weiboRcvdIDID").focus();
+			return;
+		}else if (!isNotEmpty("weiboSendPassWd", "Weibo password")){
+			$("#weiboRcvdIDPassWd").focus();
+			return;
+		}else if(!isNotEmpty("weiboSendContent", "Weibo Content")){
+			$("#weiboSendContent").focus();
+			return;
+		}else{
+			updateWeiboID=$("#weiboSendID").val();
+			updateWeiboPassWd=$("#weiboSendPassWd").val();
+			taskContent =$("#weiboSendContent").val();
+		}
 		break;
 
 	default:
@@ -172,45 +332,90 @@ function createAction() {
 	$("html,body").animate({scrollTop:($("#createTaskStep6").offset().top - 50)},"slow");
 }
 
-
+/**
+ * 创建Task
+ */
 function createNewTask(){
-	if(isSignupInfoValid()){
-		$("#signupInfo").html();
-		$.ajax({
-			type:'post',
-			data:{
-				usernamesignup:$('#usernamesignup').val(),
-				emailsignup:$('#emailsignup').val(),
-				passwdsignup:$('#passwdsignup').val(),
-			},
-		});
-		
-	}else{
-		$("#signupInfo").html("<font color=\"red\">" + "InValid SignIn Info" + "</font>");
+	//检测任务名
+	if (!isNotEmpty("taskNameText", "TaskName")){
+		$("#taskNameText").focus();
+		return;
+	}else {
+		taskName=$("#taskNameText").val();
 	}
+	
+	//记录和Trigger有关的信息成为JSON形式
+	switch (THIS_TYPE) {
+	case 0:
+		thisDetail = '"taskDeadTime" :"' + taskDatetime + '"';
+		break;
+	case 1:
+		thisDetail = '"srcMailBox" :"' + srcEmailBox + '",' +
+						'"srcMailPassWd" :"' + srcEmailPassWd + '"';
+		break;
+	case 2:
+		thisDetail = '"listenWeiboID" :"' + listenWeiboID + '",' +
+						'"listenWeiboPassWd" :"' + listenWeiboPassWd + '",' +
+						'"weiboCheckCon" :"' + listenWeiboCheckCon + '"';
+		break;
+	default:
+		thisDetail = '';
+		break;
+	}
+	
+	//记录和Action有关的信息成为JSON形式
+	switch (THAT_TYPE) {
+	case 3:
+		if(THIS_TYPE == 1){
+			//如果Trigger是邮箱 则不显示 即用监听的邮箱发邮件
+			thatDetail = '"dstMailBox" :"' + dstEmailBox + '",' + 
+							'"mailSubject" :"' + EmailSubject + '",' +
+							'"content" :"' + taskContent + '"';
+		}else{
+			//如果Trigger不是邮箱 则用新的发送邮箱
+			thatDetail = '{"dstMailBox" :"' + dstEmailBox + '",' +
+							'"srcMailBox" :"' + srcEmailBox + '",' +
+							'"srcMailPassWd" :"' + srcEmailPassWd + '",' +
+							'"mailSubject" :"' + EmailSubject + '",' +
+							'"content" :"' + taskContent + '"';
+		}
+		break;
+	case 4:
+		thatDetail = '"updateWeiboId" :"' + updateWeiboID + '",' +
+						'"updateWeiboPassWd" :"' + updateWeiboPassWd + '",' +
+						'"content" :"' + taskContent + '"';
+		break;
+	default:
+		thatDetail = '';
+	break;
+	}
+	
+	//创建JSON
+	taskJSONInfo = '[{"taskName" :"' + taskName + '",' +
+						'"taskBuilder" :"' + usernameNow + '",' + 
+						'"taskTHISType" :"' + THIS_TYPE + '",' + 
+						'"taskTHATType" :"' + THAT_TYPE + '",' + 
+						thisDetail + ',' +
+						thatDetail + ',' +
+						'}]';
+	
+	alert(taskJSONInfo);
+	
+	$.ajax({
+		type:'post',
+		data:{
+			task:taskJSONInfo,
+		},
+		url:"task",
+		success:function (canCreateTask){
+			if(canCreateTask){
+				alert("Create Task successfully!");
+			}
+		},
+		error:function (canCreateTask){
+			alert("Error in create Task.");
+		}
+	});
+		
 }
 
-
-/*function show_and_scroll_to(a,b,c)
-{
-	var d=$.browser.msie?$(window).height():window.innerHeight,
-			e=$(a),
-			f=300,
-			g=600,
-			h=navigator.userAgent.toLowerCase().search("wosbrowser")==-1;
-	e.fadeIn(f,"swing",function(){
-		var f=!1,i=e.offset().top,j=4,k=d-e.height();
-		k<0&&(k=0),$("#create_cover").height(k);
-		var l=function(){
-			if(f)return;
-			f=!0,$(".step_parent").each(function(){
-				var b=$(this);
-				parent_id="#"+b.attr("id");
-				if(parent_id==a)return!1;
-				b.find(".btn-restart").show(),
-				b.find(".btn-back").hide();}),
-			set_keyboard_init_focus(a),
-			b&&(c?setTimeout(b,c):b());
-		};
-		h?$("html,body").animate({scrollTop:i+j},g,"swing",l):($(window).scrollTop(i+j),l());}
-	);}*/

@@ -63,27 +63,3 @@ body {
 	color:white;
 	text-align:center;
 }
-
-.create-Task-Step4{
-	padding:5px;
-	display:block;
-	font-size:63px;
-	vertical-align:middle;
-}
-
-.create-Task-Step5-email{
-	display:block;
-	font-size:30px;
-	text-align: center;
-	
-}
-.create-Task-Step5-weibo{
-	display:block;
-	font-size:30px;
-	
-}
-.create-Task-Step6{
-	display:block;
-	font-size:148px;
-	
-}
