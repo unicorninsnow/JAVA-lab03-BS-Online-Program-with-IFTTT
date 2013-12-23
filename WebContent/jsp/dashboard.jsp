@@ -146,7 +146,7 @@
 	<div class="dashboard_tab_div">
 		<div class="container ">
 			<div id="myTabContent" class="tab-content">
-				<!-- ææä»»å¡çåè¡¨ -->
+				<!-- 所有任务列表 -->
 				<div class="tab-pane fade active in" id="allTask">
 					<div class="panel panel-default" id="allTask_panel">
 						<!-- Default panel contents -->
@@ -156,36 +156,25 @@
 						<div class="table-responsive">
 							<table class="table"  id="allTaskTable"
 								style="padding:0;border-spacing:0px 0px;word-wrap:break-word; table-layout:fixed;">
-								<thead style="text-align: center;">
+								<thead>
 									<tr>
-										<th width="50px" style="text-align: center;">#</th>
-										<th class="allTask_Table_Name">Task Name</th>
-										<th width="100px" style="text-align: center;">Trigger</th>
-										<th width="100px" style="text-align: center;">Action</th>
+										<th width="50px">#</th>
+										<th>Task Name</th>
+										<th width="100px">Trigger</th>
+										<th width="100px">Action</th>
+										<th width="100px">Operation</th>
 										<th width="100px" style="text-align: center;">
-											<!-- <div class="dropdown">
-												<a id="dLabel" role="button" data-toggle="dropdown"
-													data-target="#" href="/page.html"> Do <span
-													class="caret"></span>
-												</a>
-
-
-												<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" 
-													onclick="deleteChosenTasks()">Delete</ul>
-											</div>
-											<script>
-												$('.dropdown-toggle').dropdown();
-											</script> -->
 											
-											<div onclick="deleteChosenTasks('allTaskCheckBox')">Delete</div>
+											<div onclick="deleteChosenTasks('allTaskCheckBox')">
+											Delete
+											</div>
 											
 										</th>
-										<th width="80px" style="text-align: center;">Modify</th>
 									</tr>
 								</thead>
 								<tbody id="allTaskTable_tbody" style="text-align: center;">
 									<!-- <tr>
-										<td>13</td><td style='text-align: left;'>
+										<td>12</td><td style='text-align: left;'>
 											<div id='allTaskName13' data-container='body' data-toggle='popover'>Tasks Test13
 											</div>
 										</td>
@@ -197,7 +186,7 @@
 										<td>To Modify</td>
 									</tr>
 									<tr>
-										<td>12</td><td style='text-align: left;'>
+										<td>13</td><td style='text-align: left;'>
 											<div id='allTaskName12' data-container='body' data-toggle='popover'>Tasks Test12
 											</div>
 										</td>
@@ -213,26 +202,24 @@
 								
 							</table>
 							<script>
-								// æ ååå§å
 								$("table").tablecloth();
-								 
-								// æèå«ååå§å
+
 								$("table").tablecloth({
-								  theme: "paper",
-								  bordered: false,
-								  condensed: true,
-								  striped: false,
-								  sortable: true,
-								  clean: true,
-								  cleanElements: "th td",
-								  customClass: "table-hover"
+									theme : "paper",
+									bordered : false,
+									condensed : true,
+									striped : false,
+									sortable : true,
+									clean : true,
+									cleanElements : "th td",
+									customClass : "table-hover"
 								});
 							</script>
 						</div>
 					</div>
 				</div>
 				
-				<!-- æ­£å¨è¿è¡çä»»å¡çåè¡¨ -->
+				<!-- 正在运行的任务列表 -->
 				<div class="tab-pane fade" id="runTask">
 					<div class="panel panel-default" id="runTask_panel">
 						<!-- Default panel contents -->
@@ -249,19 +236,7 @@
 										<th width="100px" style="text-align: center;">Trigger</th>
 										<th width="100px" style="text-align: center;">Action</th>
 										<th width="100px" style="text-align: center;">
-											<!-- <div class="dropdown">
-												<a id="dLabel" role="button" data-toggle="dropdown"
-													data-target="#" href="/page.html"> Do <span
-													class="caret"></span>
-												</a>
-
-
-												<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" 
-													onclick="deleteChosenTasks()">Delete</ul>
-											</div>
-											<script>
-												$('.dropdown-toggle').dropdown();
-											</script> -->
+											
 											
 											<div onclick="deleteChosenTasks('runTaskCheckBox')">Stop</div>
 											
@@ -291,7 +266,7 @@
 					</div>
 				</div>
 				
-				<!-- æææ¶æ¯çåè¡¨ -->
+				<!-- 消息列表 -->
 				<div class="tab-pane fade" id="messages">
 					<p>Etsy mixtape wayfarers, ethical wes anderson tofu before
 						they sold out mcsweeney's organic lomo retro fanny pack lo-fi
@@ -305,22 +280,22 @@
 	</div>
 
 
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
-	</br>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
 
 
 </body>

@@ -9,8 +9,103 @@
 var usernameNow;
 
 
-$(document).ready(function(){
-/*	$.ajax({
+
+/*var allTaskListJsonText = '{"allTask" : ['+
+'	{"taskBuildTime":"2013-12-10 16:09",'+
+'		"updateWeiboId":"","dstMailBox":"",'+
+'		"taskTHISType":"1",'+
+'		"srcMailPassWd":"",'+
+'			"taskName":"cfdsnvk",'+
+'			"taskID":"1e88ad78-637b-46ba-8a51-271999a7025c",'+
+'			"content":"nima","taskDeadTime":"2014-12-12",'+
+'			"srcMailBox":"nima@qq.com",'+
+'			"taskTHATType":"3",'+
+'			"taskBuilder":"mzs",'+
+'			"weiboCheckCon":"haha",'+
+'			"mailSubject":"",'+
+'			"updateWeiboPassWd":"123"},'+
+'	{"taskBuildTime":"2013-12-10 16:09",'+
+'		"updateWeiboId":"","dstMailBox":"",'+
+'		"taskTHISType":"1",'+
+'		"srcMailPassWd":"",'+
+'			"taskName":"hrtfbdb",'+
+'			"taskID":"1e88ad78-637b-46ba-8a51-271999a7025c",'+
+'			"content":"nima","taskDeadTime":"2014-12-12",'+
+'			"srcMailBox":"nima@qq.com",'+
+'			"taskTHATType":"3",'+
+'			"taskBuilder":"mzs",'+
+'			"weiboCheckCon":"haha",'+
+'			"mailSubject":"",'+
+'			"updateWeiboPassWd":"123"},'+
+'	{"taskBuildTime":"2013-12-10 16:09",'+
+'		"updateWeiboId":"","dstMailBox":"",'+
+'		"taskTHISType":"1",'+
+'		"srcMailPassWd":"",'+
+'			"taskName":"ymndfbg",'+
+'			"taskID":"1e88ad78-637b-46ba-8a51-271999a7025c",'+
+'			"content":"nima","taskDeadTime":"2014-12-12",'+
+'			"srcMailBox":"nima@qq.com",'+
+'			"taskTHATType":"3",'+
+'			"taskBuilder":"mzs",'+
+'			"weiboCheckCon":"haha",'+
+'			"mailSubject":"",'+
+'			"updateWeiboPassWd":"123"}'+
+']}';*/
+var allTaskListJson;
+
+var allTaskListJsonText= [
+{"taskBuildTime":"2013-12-10 16:09",
+			"taskDeadTime":"2013-12-18 16:09",
+			"updateWeiboId":"","dstMailBox":"",
+			"taskTHISType":"0",
+			"srcMailPassWd":"",
+			"taskName":"betdf",
+			"taskID":"1e88ad78-637b-46ba-8a51-271999a7025c",
+			"content":"nima","taskDeadTime":"2014-12-12",
+			"srcMailBox":"nima@qq.com",
+			"taskTHATType":"3",
+			"taskBuilder":"mzs",
+			"weiboCheckCon":"haha",
+			"mailSubject":"",
+			"updateWeiboPassWd":"123"},
+{"taskBuildTime":"2013-12-10 16:09",
+			"updateWeiboId":"","dstMailBox":"",
+			"taskTHISType":"1",
+			"srcMailPassWd":"",
+			"taskName":"rhgsf",
+			"taskID":"1e88ad78-637b-46ba-8a51-271999a70243",
+			"content":"nima","taskDeadTime":"2014-12-12",
+			"srcMailBox":"nima@qq.com",
+			"taskTHATType":"3",
+			"taskBuilder":"mzs",
+			"weiboCheckCon":"haha",
+			"mailSubject":"",
+			"updateWeiboPassWd":"123"},
+{"taskBuildTime":"2013-12-10 16:09",
+			"updateWeiboId":"","dstMailBox":"",
+			"taskTHISType":"1",
+			"srcMailPassWd":"",
+			"taskName":"jythrbvcds",
+			"taskID":"1e88ad78-637b-46ba-8a51-271999a70825",
+			"content":"nima","taskDeadTime":"2014-12-12",
+			"srcMailBox":"nima@qq.com",
+			"taskTHATType":"4",
+			"taskBuilder":"mzs",
+			"weiboCheckCon":"haha",
+			"mailSubject":"",
+			"updateWeiboPassWd":"123"},
+];
+
+
+$(document).ready(function() {
+	allTaskListJson = eval(allTaskListJsonText);
+	$("#allTaskTable").tablesorter();
+	updateAllTaskTable();
+
+});
+
+function isLogIn() {
+	/*	$.ajax({
 		type:'post',
 		data:{
 		},
@@ -28,17 +123,43 @@ $(document).ready(function(){
 		}
 	}*/
 	/**/
-
-	updateAllTaskTable();
-		
-		
-});
-
-function isdenglu() {
 	
 }
 
 function getAllTaskList() {
+	$.ajax({
+		type:'post',
+		data:{
+			name:usernameNow,
+		},
+		url:'lookupTask',
+		success:function (allTaskListJsonText){
+			allTaskListJson = eval (allTaskListJsonText);
+		},
+		error:function (allTaskListJsonText){
+			alert("Can't get Your task List.");
+		}
+	});
+}
+
+function checkTaskIsRunning(task_ID){
+	$.ajax({
+		type:'post',
+		data:{
+			taskID:task_ID,
+		},
+		url:'IsRunning',
+		success:function (isRunning){
+		},
+		error:function (isRunning){
+			alert("Error in get Task status");
+		}
+	});
+	if(isRunning == true || isRunning == "true"){
+		return true;
+	}else {
+		return false;
+	}
 }
 
 function updateAllTaskTable() {
@@ -47,28 +168,91 @@ function updateAllTaskTable() {
 	}
 	var i=0;
 	var taskID = 1;
-	for(i=0;i<10;i++){
+	var taskTHISTypeName;
+	var taskTHATTypeName;
+	var thisContent;
+	var thatContent;
+	
+	for(i=0;i<allTaskListJson.length;i++){
+		//将Task的THIS和THAT的类型翻译 并填充有效THIS THAT信息
+		switch (allTaskListJson[i].taskTHISType) {
+		case "0":
+			taskTHISTypeName = "DateTime";
+			thisContent = "Trigger:<br/>&emsp;DateTime:&emsp;" + allTaskListJson[i].taskDeadTime;
+			break;
+		case "1":
+			taskTHISTypeName = "Email";
+			thisContent = "Trigger:<br/>&emsp;ListenEmailBox:&emsp;" + allTaskListJson[i].srcMailBox;
+			break;
+		case "2":
+			taskTHISTypeName = "Weibo";
+			thisContent = "Trigger:<br/>&emsp;ListenWeiboID:&emsp;" + allTaskListJson[i].listenWeiboID + "<br/>" +
+					"&emsp;ListenWeiboCheckCon:&emsp;" + allTaskListJson[i].weiboCheckCon;
+			break;
+
+		default:
+			taskTHISTypeName = "defaultTHIS";
+			thisContent = "Trigger:<br/>&emsp;default";
+			break;
+		}
+		switch (allTaskListJson[i].taskTHATType) {
+		case "3":
+			taskTHATTypeName = "Email";
+			thatContent = "Action:<br/>&emsp;SendEmailBox:&emsp;" + allTaskListJson[i].srcMailBox + "<br/>" +
+					"&emsp;DestinationEmailBox:&emsp;" + allTaskListJson[i].dstMailBox + "<br/>" +
+					"&emsp;EmailSubject:&emsp;" + allTaskListJson[i].mailSubject + "<br/>" +
+					"&emsp;EmailContent:&emsp;" + allTaskListJson[i].content;
+			break;
+		case "4":
+			taskTHATTypeName = "Weibo";
+			thatContent = "Action:<br/>&emsp;UpdateWeibo:&emsp;" + allTaskListJson[i].updateWeibo + "<br/>" +
+					"&emsp;WeiboContent:&emsp;" + allTaskListJson[i].content;
+			break;
+
+		default:
+			taskTHATTypeName = "defaultTHAT";
+			thatContent = "Action:<br/>&emsp;default";
+			break;
+		}
 		
-		addTr("allTaskTable_tbody", i ,"<tr>" +
-						"<td>"+ taskID + "</td><td style='text-align: left;'><div id='allTaskName" + taskID +
-						"' data-container='body' data-toggle='popover'>" + 
-						"Tasks Test" + taskID +	"</div></td><td>" +
-						"Datetime" + i+		"</td><td>" +
-						"Weibo" + 			
-						"</td><td><input id='allTaskCkb" + i + 
-						"' name='allTaskCheckBox'  type='checkbox'></td><td>To Modify</td></tr>");
+		addTr("allTaskTable_tbody", i ,
+				"<tr id='allTaskID_" + allTaskListJson[i].taskID + "' " + 
+//					(true||checkTaskIsRunning(allTaskListJson[i].taskID)? "class='success'" :"")
+					((i%2==0?true:false)? "class='success'" :"")
+					+ ">" +
+					"<td>"+ i + "</td>" +
+					"<td style='text-align: left;'><div id='allTaskID_taskName_" + allTaskListJson[i].taskID +
+						"' data-container='body' data-toggle='popover' data-container='body'" +
+						"data-animation='true' data-placement='bottom' data-html='true'" +
+						"data-delay='show:500,hide:100'>" + allTaskListJson[i].taskName + "</div></td>" +
+					"<td>" + taskTHISTypeName + "</td>" +
+					"<td>" + taskTHATTypeName + "</td>" +
+					"<td>" +
+						"<span class='glyphicon glyphicon-play' onclick='startTask(" + allTaskListJson[i].taskID + ")'></span> " +
+						"<span class='glyphicon glyphicon-stop' onclick='stopTask(" + allTaskListJson[i].taskID + ")'></span> " +
+						"<span class='glyphicon glyphicon-pencil' onclick='modifyTask(" + allTaskListJson[i].taskID + ")'></span> " +
+						"<span class='glyphicon glyphicon-remove' onclick='deleteTask(" + allTaskListJson[i].taskID + ")'></span>" +
+					"</td>" +
+					"<td>" +
+						"<input id='allTaskCkb" + allTaskListJson[i].taskID + "' name='allTaskCheckBox' type='checkbox'>" +
+					"</td>" +
+				"</tr>");
 		
-		$('#allTaskName' + taskID).popover({
-			container:'body',
-			animation:'true', 
-			placement:'bottom',
-			html:'true',
-			container:"body", 
-			delay:'show:500,hide:100',
-			content:'Task Test' + taskID + '<br>datetime:&emsp;2013-12-23 12:23<br>Weibo:&emsp;unicorninsnow@live.cn<br>RUN'});
+
+		
+		
+		
+		$('#allTaskID_taskName_' + allTaskListJson[i].taskID).popover({
+			content: allTaskListJson[i].taskName + "<br>&emsp;" +
+				(true||checkTaskIsRunning(allTaskListJson[i].taskID)? "class='success'" :"") + "<br/>" + 
+				thisContent + "<br/>" +
+				thatContent});
+			
+		
 		
 		taskID++;
 	}
+	$("#allTaskTable").tablesorter();
 	
 	
 }
@@ -102,7 +286,7 @@ function updateRunTaskTable() {
 		taskID++;
 	}
 	
-	
+	 
 }
 
 
