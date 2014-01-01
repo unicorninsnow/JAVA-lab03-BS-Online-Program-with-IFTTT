@@ -12,25 +12,6 @@ var taskIDNow;
 
 var taskJSONInfo;
 
-var thisTaskJsonText = 
-{"taskID":"1e88ad78-637b-46ba-8a51-271999a7025c",
-		"taskName":"MyTask testtest",
-		"taskBuilder":"Unicorninsnow",
-		"taskBuildTime":"2013-12-10 16:09",
-		"taskTHISType":"0",
-		"taskTHATType":"4",
-		"taskDeadTime":"2013-12-18 16:09",
-		"srcMailBox":"testSrcMail@gmail.com",
-		"srcMailPassWd":"mailpw",
-		"weiboCheckCon":"haha",
-		"dstMailBox":"dstMailBox@live.cn",
-		"mailSubject":"testmailSubject",
-		"listenWeiboID":"testlistenWeiboID",
-		"updateWeiboPassWd":"lWeibopw",
-		"updateWeiboId":"testupdateWeiboId",
-		"updateWeiboPassWd":"uWeibopw",
-		"content":"It's test content"};
-
 var taskName;
 
 var THIS_TYPE;
@@ -59,20 +40,8 @@ $(document).ready(function(){
 	var sch = window.location.search;
 	sch = sch.substring(1);
 	taskIDNow = sch.substring(sch.indexOf("=") + 1);
-		
 	
-//	$("#modifyTaskStep1").hide();
-//	$("#modifyTaskStep2-datetime").hide();
-//	$("#modifyTaskStep2-email").hide();
-//	$("#modifyTaskStep2-weibo").hide();
-//	$("#modifyTaskStep3").hide();
-//	$("#modifyTaskStep4").hide();
-//	$("#modifyTaskStep5-email").hide();
-//	$("#modifyTaskStep5-weibo").hide();
-//	$("#modifyTaskStep6").hide();
-//	$("#modifyTaskStep7").hide();
-	
-//	getTheTaskInfoJSON(taskIDNow);
+	getTheTaskInfoJSON(taskIDNow);
 	initializeTaskInfo();
 	initializeTaskToModify();
 	
@@ -83,16 +52,17 @@ $(document).ready(function(){
  * @param task_ID
  */
 function getTheTaskInfoJSON(task_ID) {
-	alert(task_ID);
+	alert(usernameNow + " wants to modify task:" + task_ID);
 	taskIDNow = task_ID;
 	$.ajax({
 		type:'post',
 		data:{
 			taskID:task_ID,
 		},
+		async:false,
 		url:'GetTaskDetails',
 		success:function (thisTaskJsonText){
-			taskJSONInfo = eval (thisTaskJsonText);
+			taskJSONInfo = eval (thisTaskJsonText)[0];
 		},
 		error:function (thisTaskJsonText){
 			alert("Can't get Your task List.");
@@ -101,7 +71,6 @@ function getTheTaskInfoJSON(task_ID) {
 }
 
 function initializeTaskInfo() {
-	taskJSONInfo = eval (thisTaskJsonText);
 	taskName = taskJSONInfo.taskName;
 	THIS_TYPE = Number(taskJSONInfo.taskTHISType);
 	THAT_TYPE = Number(taskJSONInfo.taskTHATType);
@@ -533,7 +502,7 @@ function createAction() {
  * 创建Task
  * JSON通新建任务 但没有Builder
  */
-function ModifyTask(){
+function modifyTask(){
 	//检测任务名
 	if (!isNotEmpty("taskNameText", "TaskName")){
 		$("#taskNameText").focus();
@@ -542,75 +511,40 @@ function ModifyTask(){
 		taskName=$("#taskNameText").val();
 	}
 	
-	//记录和Trigger有关的信息成为JSON形式
-	switch (THIS_TYPE) {
-	case 0:
-		thisDetail = '"taskDeadTime" :"' + taskDatetime + '"';
-		break;
-	case 1:
-		thisDetail = '"srcMailBox" :"' + srcEmailBox + '",' +
-						'"srcMailPassWd" :"' + srcEmailPassWd + '"';
-		break;
-	case 2:
-		thisDetail = '"listenWeiboID" :"' + listenWeiboID + '",' +
-						'"listenWeiboPassWd" :"' + listenWeiboPassWd + '",' +
-						'"weiboCheckCon" :"' + listenWeiboCheckCon + '"';
-		break;
-	default:
-		thisDetail = '';
-		break;
-	}
-	
-	//记录和Action有关的信息成为JSON形式
-	switch (THAT_TYPE) {
-	case 3:
-		if(THIS_TYPE == 1){
-			//如果Trigger是邮箱 则不显示 即用监听的邮箱发邮件
-			thatDetail = '"dstMailBox" :"' + dstEmailBox + '",' + 
-							'"mailSubject" :"' + EmailSubject + '",' +
-							'"content" :"' + taskContent + '"';
-		}else{
-			//如果Trigger不是邮箱 则用新的发送邮箱
-			thatDetail = '{"dstMailBox" :"' + dstEmailBox + '",' +
-							'"srcMailBox" :"' + srcEmailBox + '",' +
-							'"srcMailPassWd" :"' + srcEmailPassWd + '",' +
-							'"mailSubject" :"' + EmailSubject + '",' +
-							'"content" :"' + taskContent + '"';
-		}
-		break;
-	case 4:
-		thatDetail = '"updateWeiboId" :"' + updateWeiboID + '",' +
-						'"updateWeiboPassWd" :"' + updateWeiboPassWd + '",' +
-						'"content" :"' + taskContent + '"';
-		break;
-	default:
-		thatDetail = '';
-	break;
-	}
-	
-	//创建JSON
-	taskJSONInfo = '[{"taskName" :"' + taskName + '",' +
-						'"taskTHISType" :"' + THIS_TYPE + '",' + 
-						'"taskTHATType" :"' + THAT_TYPE + '",' + 
-						thisDetail + ',' +
-						thatDetail + ',' +
-						'}]';
-	
-	alert(taskJSONInfo);
-	
 	$.ajax({
 		type:'post',
 		data:{
-			task:taskJSONInfo,
+			taskID:taskIDNow,
+			taskName:taskName,
+			taskBuilder:usernameNow,
+			taskTHISType:THIS_TYPE,
+			taskTHATType:THAT_TYPE,
+			
+			taskDeadTime:taskDatetime,
+			srcMailBox:srcEmailBox,
+			srcMailPassWd:srcEmailPassWd,
+			listenWeiboID:listenWeiboID,
+			listenWeiboPassWd:listenWeiboPassWd,
+			weiboCheckCon:listenWeiboCheckCon,
+			
+			dstMailBox:dstEmailBox,
+			mailSubject:EmailSubject,
+			updateWeiboID:updateWeiboID,
+			updateWeiboPassWd:updateWeiboPassWd,
+			content:taskContent,
+			
 		},
 		url:"ModifyTask",
 		success:function (canModifyTask){
-			if(canModifyTask){
+			if(canModifyTask=="true"){
 				alert("Modify Task successfully!");
+				window.location.href="dashboard.jsp";
+			}else{
+				alert("Can't modify" + canModifyTask);
 			}
 		},
 		error:function (canModifyTask){
-			alert("Error in modify Task.");
+			alert("Error in modify Task. error code:" + canModifyTask);
 		}
 	});
 		

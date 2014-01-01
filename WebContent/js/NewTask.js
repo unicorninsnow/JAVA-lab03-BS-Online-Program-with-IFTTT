@@ -347,61 +347,61 @@ function createNewTask(){
 	}else {
 		taskName=$("#taskNameText").val();
 	}
-	
-	//记录和Trigger有关的信息成为JSON形式
-	switch (THIS_TYPE) {
-	case 0:
-		thisDetail = '"taskDeadTime" :"' + taskDatetime + '"';
-		break;
-	case 1:
-		thisDetail = '"srcMailBox" :"' + srcEmailBox + '",' +
-						'"srcMailPassWd" :"' + srcEmailPassWd + '"';
-		break;
-	case 2:
-		thisDetail = '"listenWeiboID" :"' + listenWeiboID + '",' +
-						'"listenWeiboPassWd" :"' + listenWeiboPassWd + '",' +
-						'"weiboCheckCon" :"' + listenWeiboCheckCon + '"';
-		break;
-	default:
-		thisDetail = '';
-		break;
-	}
-	
-	//记录和Action有关的信息成为JSON形式
-	switch (THAT_TYPE) {
-	case 3:
-		if(THIS_TYPE == 1){
-			//如果Trigger是邮箱 则不显示 即用监听的邮箱发邮件
-			thatDetail = '"dstMailBox" :"' + dstEmailBox + '",' + 
-							'"mailSubject" :"' + EmailSubject + '",' +
-							'"content" :"' + taskContent + '"';
-		}else{
-			//如果Trigger不是邮箱 则用新的发送邮箱
-			thatDetail = '{"dstMailBox" :"' + dstEmailBox + '",' +
-							'"srcMailBox" :"' + srcEmailBox + '",' +
-							'"srcMailPassWd" :"' + srcEmailPassWd + '",' +
-							'"mailSubject" :"' + EmailSubject + '",' +
-							'"content" :"' + taskContent + '"';
-		}
-		break;
-	case 4:
-		thatDetail = '"updateWeiboId" :"' + updateWeiboID + '",' +
-						'"updateWeiboPassWd" :"' + updateWeiboPassWd + '",' +
-						'"content" :"' + taskContent + '"';
-		break;
-	default:
-		thatDetail = '';
-	break;
-	}
-	
-	//创建JSON
-	taskJSONInfo = '[{"taskName" :"' + taskName + '",' +
-						'"taskBuilder" :"' + usernameNow + '",' + 
-						'"taskTHISType" :"' + THIS_TYPE + '",' + 
-						'"taskTHATType" :"' + THAT_TYPE + '",' + 
-						thisDetail + ',' +
-						thatDetail + ',' +
-						'}]';
+//	
+//	//记录和Trigger有关的信息成为JSON形式
+//	switch (THIS_TYPE) {
+//	case 0:
+//		thisDetail = '"taskDeadTime" :"' + taskDatetime + '"';
+//		break;
+//	case 1:
+//		thisDetail = '"srcMailBox" :"' + srcEmailBox + '",' +
+//						'"srcMailPassWd" :"' + srcEmailPassWd + '"';
+//		break;
+//	case 2:
+//		thisDetail = '"listenWeiboID" :"' + listenWeiboID + '",' +
+//						'"listenWeiboPassWd" :"' + listenWeiboPassWd + '",' +
+//						'"weiboCheckCon" :"' + listenWeiboCheckCon + '"';
+//		break;
+//	default:
+//		thisDetail = '';
+//		break;
+//	}
+//	
+//	//记录和Action有关的信息成为JSON形式
+//	switch (THAT_TYPE) {
+//	case 3:
+//		if(THIS_TYPE == 1){
+//			//如果Trigger是邮箱 则不显示 即用监听的邮箱发邮件
+//			thatDetail = '"dstMailBox" :"' + dstEmailBox + '",' + 
+//							'"mailSubject" :"' + EmailSubject + '",' +
+//							'"content" :"' + taskContent + '"';
+//		}else{
+//			//如果Trigger不是邮箱 则用新的发送邮箱
+//			thatDetail = '{"dstMailBox" :"' + dstEmailBox + '",' +
+//							'"srcMailBox" :"' + srcEmailBox + '",' +
+//							'"srcMailPassWd" :"' + srcEmailPassWd + '",' +
+//							'"mailSubject" :"' + EmailSubject + '",' +
+//							'"content" :"' + taskContent + '"';
+//		}
+//		break;
+//	case 4:
+//		thatDetail = '"updateWeiboId" :"' + updateWeiboID + '",' +
+//						'"updateWeiboPassWd" :"' + updateWeiboPassWd + '",' +
+//						'"content" :"' + taskContent + '"';
+//		break;
+//	default:
+//		thatDetail = '';
+//	break;
+//	}
+//	
+//	//创建JSON
+//	taskJSONInfo = '[{"taskName" :"' + taskName + '",' +
+//						'"taskBuilder" :"' + usernameNow + '",' + 
+//						'"taskTHISType" :"' + THIS_TYPE + '",' + 
+//						'"taskTHATType" :"' + THAT_TYPE + '",' + 
+//						thisDetail + ',' +
+//						thatDetail + ',' +
+//						'}]';
 	
 //	alert(taskJSONInfo);
 	
@@ -431,6 +431,7 @@ function createNewTask(){
 			alert(canCreateTask);
 			if(canCreateTask == "true"){
 				alert("Create Task successfully!");
+				window.location.href="dashboard.jsp";
 			}else {
 				alert("Fail in create Task!");
 			}

@@ -108,7 +108,7 @@ function signin(){
 			success:function (isLogIn){
 				if(isLogIn == "true"){
 					alert("SignIn successfully.");
-					 window.location.href="dashboard.jsp";
+					window.location.href="dashboard.jsp";
 				}else{
 					alert("can't signin!");
 				}

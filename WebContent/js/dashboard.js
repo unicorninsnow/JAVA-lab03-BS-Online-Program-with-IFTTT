@@ -14,59 +14,6 @@ var taskAllNum = 0;
 var taskinRunNum = 0;
 var taskinRunListBaseOnAllTask = new Array();
 
-/*var allTaskListJsonText= [
-{"taskID":"1e88ad78-637b-46ba-8a51-271999a7025c",
-			"taskName":"MyTask testtest",
-			"taskBuilder":"Unicorninsnow",
-			"taskBuildTime":"2013-12-10 16:09",
-			"taskTHISType":"0",
-			"taskTHATType":"4",
-			"taskDeadTime":"2013-12-18 16:09",
-			"srcMailBox":"testSrcMail@gmail.com",
-			"srcMailPassWd":"mailpw",
-			"weiboCheckCon":"haha",
-			"dstMailBox":"dstMailBox@live.cn",
-			"mailSubject":"testmailSubject",
-			"listenWeiboID":"testlistenWeiboID",
-			"updateWeiboPassWd":"lWeibopw",
-			"updateWeiboId":"testupdateWeiboId",
-			"updateWeiboPassWd":"uWeibopw",
-			"content":"It's test content"},
-{"taskID":"1e88ad78-637b-46ba-8a51-271999a7wvds",
-			"taskName":"MyTask anothertest",
-			"taskBuilder":"Unicorninsnow",
-			"taskBuildTime":"2013-12-11 16:09",
-			"taskTHISType":"1",
-			"taskTHATType":"4",
-			"taskDeadTime":"2013-12-18 16:09",
-			"srcMailBox":"testSrcMail@gmail.com",
-			"srcMailPassWd":"mailpw",
-			"weiboCheckCon":"haha",
-			"dstMailBox":"dstMailBox@live.cn",
-			"mailSubject":"testmailSubject",
-			"listenWeiboID":"testlistenWeiboID",
-			"updateWeiboPassWd":"lWeibopw",
-			"updateWeiboId":"testupdateWeiboId",
-			"updateWeiboPassWd":"uWeibopw",
-			"content":"It's test content"},
-{"taskID":"1e88ad78-637b-46ba-8a51-27nhfgbfdfdv",
-			"taskName":"MyTask again",
-			"taskBuilder":"Unicorninsnow",
-			"taskBuildTime":"2013-12-12 16:09",
-			"taskTHISType":"2",
-			"taskTHATType":"3",
-			"taskDeadTime":"2013-12-18 16:09",
-			"srcMailBox":"testSrcMail@gmail.com",
-			"srcMailPassWd":"mailpw",
-			"weiboCheckCon":"haha",
-			"dstMailBox":"dstMailBox@live.cn",
-			"mailSubject":"Subject",
-			"listenWeiboID":"testlistenWeiboID",
-			"updateWeiboPassWd":"lWeibopw",
-			"updateWeiboId":"testupdateWeiboId",
-			"updateWeiboPassWd":"uWeibopw",
-			"content":"It's test content"},
-];*/
 
 
 
@@ -74,10 +21,6 @@ $(document).ready(function() {
 	usernameNow=$("#userInfoDropdownMenu").html();
 	
 	getAllTaskList();
-//	allTaskListJson = eval(allTaskListJsonText);
-//	alert("in the ready.");
-//	alert("in ready alltasknum from json:" + allTaskListJson.length);
-//	alert("in ready alltasknum from json:");
 	updateAllTaskTable();
 	
 	$("#allTaskTable").tablesorter();
@@ -148,19 +91,16 @@ function checkTaskIsRunning(task_ID){
 		url:'IsRunning',
 		async:false,
 		success:function (isRunning){
-//			return Boolean(isRunning);
 			if(isRunning ==="true"){
-//				alert(task_ID + " in check run is not run." + isRunning);
 				returnrun = true;
 			}
 			else{
-//				alert(task_ID + " in check run is run." + isRunning);
 				returnrun = false;
 			}
 		},
 		error:function (isRunning){
 			alert("Error in get Task status");
-//			return false;
+			returnrun = false;
 		}
 	});
 	return returnrun;
@@ -180,15 +120,10 @@ function updateAllTaskTable() {
 	taskinRunNum = 0;
 	
 	taskAllNum = allTaskListJson.length;
-	alert("alltask list json length from serlvet:" + taskAllNum);
 	$("#TaskAllNum").html(taskAllNum);
 	
 	for(i=0;i<allTaskListJson.length;i++){
 		var isTheTaskRun = checkTaskIsRunning(allTaskListJson[i].taskID);
-		alert(allTaskListJson[i].taskID + " in update status: " + isTheTaskRun);
-//		if(isTheTaskRun) alert("run in update" + allTaskListJson[i].taskID);
-//		else alert("not run in update" + allTaskListJson[i].taskID);
-//		var isTheTaskRun = (i%2==0?true:false);
 		
 		//将Task的THIS和THAT的类型翻译 并填充有效THIS THAT信息
 		switch (Number(allTaskListJson[i].taskTHISType)) {

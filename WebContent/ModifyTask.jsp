@@ -2,7 +2,7 @@
 	pageEncoding="utf-8"%>
 <% /*检测是否已登录*/ %>
 <%@include file="isLogIn.jsp" %>
-<%String userNameLogIn = (String)session.getAttribute("user"); %>
+<%String userNameLogIn = (String)session.getAttribute("name"); %>
 <%-- <%String taskIDtoModify = request.getParameter("task_ID"); %> --%>
 <!DOCTYPE HTML>
 <html>

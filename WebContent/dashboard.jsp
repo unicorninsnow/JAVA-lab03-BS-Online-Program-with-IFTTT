@@ -158,20 +158,6 @@
 								</tbody>
 								
 							</table>
-							<script>
-								/* $("table").tablecloth();
-
-								$("table").tablecloth({
-									theme : "paper",
-									bordered : false,
-									condensed : true,
-									striped : false,
-									sortable : true,
-									clean : true,
-									cleanElements : "th td",
-									customClass : "table-hover"
-								}); */
-							</script>
 						</div>
 					</div>
 				</div>
@@ -247,20 +233,6 @@
 								</tbody>
 								
 							</table>
-							<script>
-							/* $("table").tablecloth();
-
-							$("table").tablecloth({
-							  theme: "paper",
-							  bordered: false,
-							  condensed: true,
-							  striped: false,
-							  sortable: true,
-							  clean: false,
-							  cleanElements: "th td",
-							  customClass: "table-hover"
-							});*/
-							</script>
 						</div>
 					</div>
 				</div>
