@@ -33,13 +33,14 @@ public class PostNoticeMessage extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
-		int privilege = Integer.parseInt(request.getParameter("privilege"));
+		
 		String name = request.getParameter("name");
 		String messageContent = request.getParameter("messageContent");
 		MsgTableManager opObj = new MsgTableManager();
 		PrintWriter out = null;
 		try {
 			out = response.getWriter();
+			int privilege = Integer.parseInt(request.getParameter("privilege"));
 			boolean result = opObj.postNoticeMessage(privilege, name, messageContent);
 			out.print(result);
 		} catch (Exception e) {
@@ -52,13 +53,14 @@ public class PostNoticeMessage extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		int privilege = Integer.parseInt(request.getParameter("privilege"));
+		
 		String name = request.getParameter("name");
 		String messageContent = request.getParameter("messageContent");
 		MsgTableManager opObj = new MsgTableManager();
 		PrintWriter out = null;
 		try {
 			out = response.getWriter();
+			int privilege = Integer.parseInt(request.getParameter("privilege"));
 			boolean result = opObj.postNoticeMessage(privilege, name, messageContent);
 			out.print(result);
 		} catch (Exception e) {

@@ -31,6 +31,14 @@
         <servlet-name>GetNonAddedEvent</servlet-name>
         <servlet-class>eventServlet.GetNonAddedEvent</servlet-class>
    </servlet>
+   <servlet>
+        <servlet-name>DeleteAdminSendMessage</servlet-name>
+        <servlet-class>messageServlet.DeleteAdminSendMessage</servlet-class>
+   </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteAdminSendMessage</servlet-name>
+        <url-pattern>/DeleteAdminSendMessage</url-pattern>
+   </servlet-mapping>
     <servlet>
         <servlet-name>GetAdminSendMessage</servlet-name>
         <servlet-class>messageServlet.GetAdminSendMessage</servlet-class>
@@ -60,7 +68,7 @@
         <servlet-class>messageServlet.GetNoticeMessage</servlet-class>
    </servlet>
     <servlet-mapping>
-        <servlet-name>GetNoticeMessage</servlet-name>
+        <servlet-name>GetNoticeMessaget</servlet-name>
         <url-pattern>/GetNoticeMessage</url-pattern>
    </servlet-mapping>
    <servlet>
@@ -136,20 +144,20 @@
         <url-pattern>/DeleteTask</url-pattern>
    </servlet-mapping>
     <servlet>
-        <servlet-name>GetTaskDetails</servlet-name>
-        <servlet-class>taskServlet.GetTaskDetails</servlet-class>
-   </servlet>
-    <servlet-mapping>
-        <servlet-name>GetTaskDetails</servlet-name>
-        <url-pattern>/GetTaskDetails</url-pattern>
-   </servlet-mapping>
-    <servlet>
         <servlet-name>LookupTask</servlet-name>
         <servlet-class>taskServlet.LookupTask</servlet-class>
    </servlet>
     <servlet-mapping>
         <servlet-name>LookupTask</servlet-name>
         <url-pattern>/LookupTask</url-pattern>
+   </servlet-mapping>
+    <servlet>
+        <servlet-name>GetTaskDetails</servlet-name>
+        <servlet-class>taskServlet.GetTaskDetails</servlet-class>
+   </servlet>
+    <servlet-mapping>
+        <servlet-name>GetTaskDetails</servlet-name>
+        <url-pattern>/GetTaskDetails</url-pattern>
    </servlet-mapping>
     <servlet>
         <servlet-name>ModifyTask</servlet-name>
@@ -160,6 +168,14 @@
         <url-pattern>/ModifyTask</url-pattern>
    </servlet-mapping>
     <servlet>
+        <servlet-name>GetUserDetails</servlet-name>
+        <servlet-class>userServlet.GetUserDetails</servlet-class>
+   </servlet>
+    <servlet-mapping>
+        <servlet-name>GetUserDetails</servlet-name>
+        <url-pattern>/GetUserDetails</url-pattern>
+   </servlet-mapping>
+    <servlet>
         <servlet-name>LoginAuthe</servlet-name>
         <servlet-class>userServlet.LoginAuthe</servlet-class>
    </servlet>
@@ -167,7 +183,6 @@
         <servlet-name>LoginAuthe</servlet-name>
         <url-pattern>/LoginAuthe</url-pattern>
    </servlet-mapping>
-
     <servlet>
         <servlet-name>lookupUser</servlet-name>
         <servlet-class>userServlet.lookupUser</servlet-class>
@@ -175,6 +190,22 @@
     <servlet-mapping>
         <servlet-name>lookupUser</servlet-name>
         <url-pattern>/lookupUser</url-pattern>
+   </servlet-mapping>
+    <servlet>
+        <servlet-name>ModifyUserDetails</servlet-name>
+        <servlet-class>userServlet.ModifyUserDetails</servlet-class>
+   </servlet>
+    <servlet-mapping>
+        <servlet-name>ModifyUserDetails</servlet-name>
+        <url-pattern>/ModifyUserDetails</url-pattern>
+   </servlet-mapping>
+    <servlet>
+        <servlet-name>RegisterAccount</servlet-name>
+        <servlet-class>userServlet.RegisterAccount</servlet-class>
+   </servlet>
+   <servlet-mapping>
+        <servlet-name>RegisterAccount</servlet-name>
+        <url-pattern>/RegisterAccount</url-pattern>
    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DeleteEvent</servlet-name>

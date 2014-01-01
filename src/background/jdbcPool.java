@@ -28,7 +28,8 @@ public final class jdbcPool {
 	//test
 	public static Connection getDataSource() throws SQLException, ClassNotFoundException{
 		Class.forName("com.mysql.jdbc.Driver");
-		Connection conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/ifttt","root","");
+		Connection conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/ifttt","root","root");
+	//	conn.setAutoCommit(false); //关闭自动提交
 		return conn;
 	} 
 	

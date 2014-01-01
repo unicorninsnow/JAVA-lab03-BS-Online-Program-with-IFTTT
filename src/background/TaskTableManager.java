@@ -13,6 +13,8 @@ import java.util.UUID;
 
 import javax.naming.NamingException;
 
+import org.json.JSONException;
+
 /**
  * 管理task表
  * @author mzs
@@ -151,7 +153,13 @@ public class TaskTableManager {
 		return  taskDetailsResultSet;
 
 	}
-	
+	public  String  getTaskName(String taskID) throws SQLException, ClassNotFoundException, NamingException{
+		ResultSet set = getTaskDetails(taskID);
+		if(set.next())
+			return set.getString("name");
+		else
+			return null;
+	}
 	
 	/**
 	 * 删除任务
@@ -283,7 +291,12 @@ public class TaskTableManager {
 //	
 //	
 	
-	
+	public static void main(String args[]) throws ClassNotFoundException, SQLException, JSONException, NamingException{
+		TaskTableManager  test = new TaskTableManager();
+		System.out.println(ResultSet2Json.resultSetToJson(test.getTaskDetails("1e88ad78-637b-46ba-8a51-271999a7025c")));
+		
+		
+	}
 	
 	
 	

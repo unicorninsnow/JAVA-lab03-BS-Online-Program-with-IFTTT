@@ -34,6 +34,7 @@ public class StartTask extends HttpServlet {
 		// TODO Auto-generated method stub
 		String name = request.getParameter("name");
 		String taskID = request.getParameter("taskID");
+		System.out.println("user:" + name + " wants to start task:" + taskID);
 		RunningTaskPool opObj = new RunningTaskPool();
 		PrintWriter out = null;
 		try {
@@ -53,6 +54,7 @@ public class StartTask extends HttpServlet {
 		// TODO Auto-generated method stub
 		String name = request.getParameter("name");
 		String taskID = request.getParameter("taskID");
+		System.out.println("user:" + name + " wants to start task:" + taskID);
 		RunningTaskPool opObj = new RunningTaskPool();
 		PrintWriter out = null;
 		try {

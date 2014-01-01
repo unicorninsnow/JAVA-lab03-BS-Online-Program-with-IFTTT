@@ -16,7 +16,7 @@ import background.TaskTableManager;
 /**
  * Servlet implementation class LookupTask
  */
-@WebServlet("/LookupTask")
+//@WebServlet("/LookupTask")
 public class LookupTask extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

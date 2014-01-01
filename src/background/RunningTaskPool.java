@@ -59,7 +59,7 @@ public class RunningTaskPool {
 	 * @param taskID
 	 * @param taskThread
 	 */
-	private  void  addTaskThread(String taskID,Thread taskThread){
+	private synchronized void  addTaskThread(String taskID,Thread taskThread){
 		runningTaskThreadPool.put(taskID,taskThread);	
 	}
 	
@@ -72,7 +72,7 @@ public class RunningTaskPool {
 	 * @param taskThread
 	 * 对应线程
 	 */
-	private void addRunningTask(String name,String taskID,Thread taskThread){
+	private synchronized void addRunningTask(String name,String taskID,Thread taskThread){
 		ArrayList runningTaskList = (ArrayList)runningTaskPool.get(name);
 		if(runningTaskList == null){ //该用户尚未运行过任务
 			runningTaskList = new ArrayList();
@@ -89,7 +89,7 @@ public class RunningTaskPool {
 	 * @return
 	 * 成功返回true，失败(未找到该线程)返回false
 	 */
-	private boolean deleteTaskThread(String taskID){
+	private synchronized boolean deleteTaskThread(String taskID){
 		//根据hashMap中key同则覆盖
 		if(getTaskThread(taskID)!=null){
 			runningTaskThreadPool.put(taskID, null);
@@ -107,7 +107,7 @@ public class RunningTaskPool {
 	 * @return
 	 * 删除成功返回true，失败则返回false
 	 */
-	private boolean deleteRunningTask(String name,String taskID){
+	private synchronized boolean deleteRunningTask(String name,String taskID){
 		ArrayList runningTaskList = (ArrayList)runningTaskPool.get(name);
 		if(runningTaskList == null) //该用户尚未运行过任务
 			return false;
@@ -120,7 +120,7 @@ public class RunningTaskPool {
 	 * @param taskID
 	 * @return
 	 */
-	public static boolean isRunning(String taskID){
+	public synchronized static boolean isRunning(String taskID){
 		Thread tempThread = (EventDriveThread)runningTaskThreadPool.get(taskID);
 		if(tempThread==null)
 			return false;
@@ -165,10 +165,7 @@ public class RunningTaskPool {
 		
 	public static void main(String args[]) throws ClassNotFoundException, SQLException, NamingException{
 		RunningTaskPool test = new RunningTaskPool();
-		System.out.println(isRunning("dingshifayoujian"));
 		test.startTask("mzs", "dingshifayoujian");
-		//test=null;
-		System.out.println(isRunning("dingshifayoujian"));
 		
 	}
 }

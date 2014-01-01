@@ -32,11 +32,11 @@ public class GetNonAddedEvent extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)  {
-		int type = Integer.parseInt(request.getParameter("type"));
 		EventTableManager opObj = new EventTableManager();
 		PrintWriter out = null;
 		try {
 			out = response.getWriter();
+			int type = Integer.parseInt(request.getParameter("type"));
 			String result = ResultSet2Json.resultSetToJson(opObj.getNonAddedEvent(type));
 			out.print(result);
 		} catch (Exception e) {
@@ -48,11 +48,12 @@ public class GetNonAddedEvent extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
-		int type = Integer.parseInt(request.getParameter("type"));
+
 		EventTableManager opObj = new EventTableManager();
 		PrintWriter out = null;
 		try {
 			out = response.getWriter();
+			int type = Integer.parseInt(request.getParameter("type"));
 			String result = ResultSet2Json.resultSetToJson(opObj.getNonAddedEvent(type));
 			out.print(result);
 		} catch (Exception e) {

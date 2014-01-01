@@ -96,69 +96,30 @@ function isSigninInfoValid(){
 
 
 function signin(){
-	if(isSigninInfoValid()){
+//	if(isSigninInfoValid()){
 		$("#signinInfo").html();
 		$.ajax({
 			type:'post',
 			data:{
-				usernamesignin:$('#usernamesignin').val(),
-				passwdsignin:$('#passwdsignin').val(),
+				name:$('#usernamesignin').val(),
+				passWd:$('#passwdsignin').val(),
 			},
+			url:'LoginAuthe',
+			success:function (isLogIn){
+				if(isLogIn == "true"){
+					alert("SignIn successfully.");
+					 window.location.href="dashboard.jsp";
+				}else{
+					alert("can't signin!");
+				}
+			},
+			error:function (a){
+				alert("network error occur!")
+			}
 		});
 		
 		
-	}else{
-		$("#signinInfo").html("<font color=\"red\">" + "InValid SignIn Info" + "</font>");
-	}
+//	}else{
+//		$("#signinInfo").html("<font color=\"red\">" + "InValid SignIn Info" + "</font>");
+//	}
 }
-
-/*
-var request;
-function signin(){
-	
-    if(isUserNameValid()&&isPassWdValid()){
-        var nameObj=document.getElementsById("username");
-        var name=nameObj[0].value;
-        var pwObj=document.getElementsById("passwd");
-        var pw=pwObj[0].value;
-        var url = "login?name="+name+"&pw="+pw;        //OB login servlet 
-        if(window.XMLHttpRequest) {  
-            request = new XMLHttpRequest();  //IE7, Firefox, Opera 
-        }else if(window.ActiveXObject) {  
-            requset = new ActiveXObject("Microsoft.XMLHTTP");   //IE5,IE6
-        }
-        if(request!==null){  
-            request.open("GET",url,true);
-            request.onreadystatechange=loginback;
-            request.send(null);
-        }
-    }else{
-//    	document.write("<h1>This is a heading</h1>");
-    }
-       
-}
-
-function loginback(){
-        if(request.readyState===4){  
-                if(request.status===200){  
-                    var flag=request.responseText;
-                    if(flag==="success"){
-                        //go to personal page
-                        location.href="personalpage.html";
-                    }
-                    else if(flag==="admin"){
-                         location.href="adminpage.html";
-                    }
-                   else{
-                       var info="<div class='notice error'><i class='icon-remove-sign '>\n\
-                        </i>Incorrect username or password<a href='#close' class='icon-remove'></a></div>";
-                       document.getElementById("logininfo").innerHTML=info;  
-                   }
-                }else{
-                         var info="<div class='notice error'><i class='icon-remove-sign '>\n\
-                            </i>Network error<a href='#close' class='icon-remove'></a></div>";
-                        document.getElementById("logininfo").innerHTML=info;  
-                }
-        }
-}
-*/

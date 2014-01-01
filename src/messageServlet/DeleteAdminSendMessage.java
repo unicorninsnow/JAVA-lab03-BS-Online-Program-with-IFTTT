@@ -34,11 +34,11 @@ public class DeleteAdminSendMessage extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		int privilege = Integer.parseInt(request.getParameter("privilege"));
 		String messageID = request.getParameter("messageID");
 		MsgTableManager opObj = new MsgTableManager();
 		PrintWriter out = response.getWriter();
 		try {
+			int privilege = Integer.parseInt(request.getParameter("privilege"));
 			boolean flag = opObj.deleteAdminSendMessage(privilege, messageID);
 			out.print(flag);
 		} catch (Exception e) {
@@ -52,11 +52,12 @@ public class DeleteAdminSendMessage extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		int privilege = Integer.parseInt(request.getParameter("privilege"));
+		
 		String messageID = request.getParameter("messageID");
 		MsgTableManager opObj = new MsgTableManager();
 		PrintWriter out = response.getWriter();
 		try {
+			int privilege = Integer.parseInt(request.getParameter("privilege"));
 			boolean flag = opObj.deleteAdminSendMessage(privilege, messageID);
 			out.print(flag);
 		} catch (Exception e) {

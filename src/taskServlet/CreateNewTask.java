@@ -32,41 +32,55 @@ public class CreateNewTask extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
+		System.out.print("hehec");
+		PrintWriter out = null;
+		
+		try {
+			out = response.getWriter();
 		String taskName = request.getParameter("taskName");
 		String taskBuilder = request.getParameter("taskBuilder");
-		String  taskDeadTime = request.getParameter(" taskDeadTime");
+		String  taskDeadTime = request.getParameter("taskDeadTime");
+		System.out.print("hehec");
 		int taskTHISType = Integer.parseInt(request.getParameter("taskTHISType"));
 		int taskTHATType = Integer.parseInt(request.getParameter("taskTHATType"));
+		System.out.print("hehecs");
 		String srcMailBox = request.getParameter("srcMailBox");
 		String srcMailPassWd = request.getParameter("srcMailPassWd");
 		String updateWeiboID = request.getParameter("updateWeiboID");
 		String updateWeiboPassWd = request.getParameter("updateWeiboPassWd");
 		String dstMailBox = request.getParameter("dstMailBox");
-		String  listenWeiboID = request.getParameter(" listenWeiboID");
+		String  listenWeiboID = request.getParameter("listenWeiboID");
 		String listenWeiboPassWd = request.getParameter("listenWeiboPassWd");
 		String content = request.getParameter("content");
 		String mailSubject = request.getParameter("mailSubject");
 		String weiboCheckCon = request.getParameter("weiboCheckCon");
 		TaskTableManager opObj = new TaskTableManager();
-		PrintWriter out = null;
-		try {
-			out = response.getWriter();
-			opObj.createNewTask(taskName, taskBuilder, taskDeadTime, taskTHISType, taskTHATType, srcMailBox, srcMailPassWd, updateWeiboID, updateWeiboPassWd, dstMailBox, listenWeiboID, listenWeiboPassWd, content, mailSubject, weiboCheckCon);
-			out.print("true");
-		} catch (Exception e) {
+		
+		opObj.createNewTask(taskName, taskBuilder, taskDeadTime, taskTHISType, taskTHATType, srcMailBox, srcMailPassWd, updateWeiboID, updateWeiboPassWd, dstMailBox, listenWeiboID, listenWeiboPassWd, content, mailSubject, weiboCheckCon);
+		out.print("true");
+		} catch (NumberFormatException e1) {
+		    out.print("error");
+		} 
+		catch (Exception e) {
 		    out.print("error");
 		}
 	}
+
+	
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		System.out.print("hehec");
+		PrintWriter out = null;
+		try {
+			out = response.getWriter();
 		String taskName = request.getParameter("taskName");
 		String taskBuilder = request.getParameter("taskBuilder");
-		String  taskDeadTime = request.getParameter(" taskDeadTime");
+		String  taskDeadTime = request.getParameter("taskDeadTime");
 		int taskTHISType = Integer.parseInt(request.getParameter("taskTHISType"));
 		int taskTHATType = Integer.parseInt(request.getParameter("taskTHATType"));
 		String srcMailBox = request.getParameter("srcMailBox");
@@ -74,18 +88,18 @@ public class CreateNewTask extends HttpServlet {
 		String updateWeiboID = request.getParameter("updateWeiboID");
 		String updateWeiboPassWd = request.getParameter("updateWeiboPassWd");
 		String dstMailBox = request.getParameter("dstMailBox");
-		String  listenWeiboID = request.getParameter(" listenWeiboID");
+		String  listenWeiboID = request.getParameter("listenWeiboID");
 		String listenWeiboPassWd = request.getParameter("listenWeiboPassWd");
 		String content = request.getParameter("content");
 		String mailSubject = request.getParameter("mailSubject");
 		String weiboCheckCon = request.getParameter("weiboCheckCon");
 		TaskTableManager opObj = new TaskTableManager();
-		PrintWriter out = null;
-		try {
-			out = response.getWriter();
-			opObj.createNewTask(taskName, taskBuilder, taskDeadTime, taskTHISType, taskTHATType, srcMailBox, srcMailPassWd, updateWeiboID, updateWeiboPassWd, dstMailBox, listenWeiboID, listenWeiboPassWd, content, mailSubject, weiboCheckCon);
-			out.print("true");
-		} catch (Exception e) {
+		opObj.createNewTask(taskName, taskBuilder, taskDeadTime, taskTHISType, taskTHATType, srcMailBox, srcMailPassWd, updateWeiboID, updateWeiboPassWd, dstMailBox, listenWeiboID, listenWeiboPassWd, content, mailSubject, weiboCheckCon);
+		out.print("true");
+		} catch (NumberFormatException e1) {
+		    out.print("error");
+		} 
+		catch (Exception e) {
 		    out.print("error");
 		}
 	}

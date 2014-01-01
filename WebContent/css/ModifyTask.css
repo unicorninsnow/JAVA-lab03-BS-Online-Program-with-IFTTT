@@ -1,0 +1,120 @@
+@CHARSET "utf-8";
+body {
+  padding-top: 50px;
+}
+.userInfoButton{
+	padding:5px;
+	font-size:25px;
+	color:white;
+	text-align:center;
+}
+.userInfoButtonDropdown{
+	font-size:25px;
+	color:white;
+	text-align:center;
+}
+.userInfoButtonDropdown{
+	font-size:25px;
+	color:white;
+	text-align:center;
+}
+
+.modify-Task-info {
+	padding: 0px 15px;
+ 	text-align: left;
+	background-image:linear-gradient(to bottom,#DFDFDF 0,#F3F3F3 100%);
+}
+
+.modify-Task-info_title h1,
+.modify-Task-info_title .h1{
+	font-size:80px;
+	font-family:Arial;
+	font-weight:bold;
+	text-align: left;
+	padding: 3px;
+}
+
+.button-task-confirm{
+	padding:3px;
+	font-size:30px;
+	vertical-align:middle;
+}
+
+.modify-Task{
+  text-align: center;
+	
+}
+.modify-Task-Step0{
+	font-size:148px;
+	font-family:Arial;
+	font-weight:bold;
+}
+
+.modify-Task-Step1{
+	display:block;
+	font-size:63px;
+	
+}
+
+.modify-Task-Step2-datetime{
+	display:block;
+	font-size:30px;
+	text-align: center;
+	vertical-align:middle;
+}
+.datetime{
+	display:block;
+	font-size:30px;
+	text-align: center;
+	align: center;
+}
+.modify-Task-Step2-email{
+	display:block;
+	font-size:30px;
+	text-align: center;
+	
+}
+.modify-Task-Step2-weibo{
+	display:none;
+	font-size:30px;
+	
+}
+.modify-Task-Step3{
+	display:block;
+	font-size:148px;
+	
+}
+
+.modify-Task-Step4{
+	display:block;
+	font-size:63px;
+	
+}
+
+.modify-Task-Step5-email{
+	display:block;
+	font-size:30px;
+	text-align: center;
+	
+}
+.modify-Task-Step5-weibo{
+	display:block;
+	font-size:30px;
+	
+}
+.modify-Task-Step6{
+	display:block;
+	font-size:148px;
+	
+}
+.modify-Task-Step7{
+	display:block;
+	font-size:63px;
+}
+.modifyTask-input-center-block{
+	padding:2px;
+	display:block;
+	text-align:center;
+	vertical-align:middle;
+	font-size:20px;
+}

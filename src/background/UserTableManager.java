@@ -98,6 +98,7 @@ public class UserTableManager {
 			userRegsPst.setInt(12, 0);//level
 			userRegsPst.executeUpdate();
 			userRegsPst.close();
+		  //	conn.commit();
 		    
 		}
     //同样插入不成功要进行回滚

@@ -10,6 +10,8 @@ import java.util.UUID;
 
 import javax.naming.NamingException;
 
+import org.json.JSONException;
+
 import background.UserTableManager;
 import background.jdbcPool;
 
@@ -350,10 +352,10 @@ public class MsgTableManager {
 		ResultSet instationMessageResultSet = pstmt.executeQuery();
 	    return instationMessageResultSet;
 	}
-	public static void main(String args[]) throws ClassNotFoundException, SQLException, NamingException{
-		MsgTableManager test = new MsgTableManager();
-		test.sendInstationMessage("mzs", "niu", "Are y ");
-	} 
+//	public static void main(String args[]) throws ClassNotFoundException, SQLException, NamingException, JSONException{
+//		MsgTableManager test = new MsgTableManager();
+//		System.out.println(ResultSet2Json.resultSetToJson(test.getNoticeMessage()));
+//	} 
 	
 	
 }

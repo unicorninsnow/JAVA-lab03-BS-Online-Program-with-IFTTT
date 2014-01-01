@@ -33,11 +33,12 @@ public class GetAdminSendMessage extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		int privilege = Integer.parseInt(request.getParameter("privilege"));
+		
 		String name = request.getParameter("name");
 		MsgTableManager opObj = new MsgTableManager();
 		PrintWriter out = response.getWriter();
 		try {
+			int privilege = Integer.parseInt(request.getParameter("privilege"));
 			String result = ResultSet2Json.resultSetToJson(opObj.getAdminSendMessage(privilege, name));
 			out.print(result);
 		} catch (Exception e) {
@@ -50,11 +51,12 @@ public class GetAdminSendMessage extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		int privilege = Integer.parseInt(request.getParameter("privilege"));
+	
 		String name = request.getParameter("name");
 		MsgTableManager opObj = new MsgTableManager();
 		PrintWriter out = response.getWriter();
 		try {
+			int privilege = Integer.parseInt(request.getParameter("privilege"));
 			String result = ResultSet2Json.resultSetToJson(opObj.getAdminSendMessage(privilege, name));
 			out.print(result);
 		} catch (Exception e) {

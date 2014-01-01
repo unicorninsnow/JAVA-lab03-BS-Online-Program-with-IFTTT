@@ -33,12 +33,12 @@ public class DeleteEvent extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		String  name = request.getParameter("name");
-		int type = Integer.parseInt(request.getParameter("type"));
-		int selectedEventType = Integer.parseInt(request.getParameter("selectedEventType"));
 		PrintWriter out = null;
 		EventTableManager opObj  = new EventTableManager();
 		try {
 			out = response.getWriter();
+			int type = Integer.parseInt(request.getParameter("type"));
+			int selectedEventType = Integer.parseInt(request.getParameter("selectedEventType"));
 			boolean result = opObj.deleteEvent(name, type, selectedEventType);
 			out.print(result);
 		} catch (Exception e) {
@@ -52,12 +52,12 @@ public class DeleteEvent extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String  name = request.getParameter("name");
-		int type = Integer.parseInt(request.getParameter("type"));
-		int selectedEventType = Integer.parseInt(request.getParameter("selectedEventType"));
 		PrintWriter out = null;
 		EventTableManager opObj  = new EventTableManager();
 		try {
 			out = response.getWriter();
+			int type = Integer.parseInt(request.getParameter("type"));
+			int selectedEventType = Integer.parseInt(request.getParameter("selectedEventType"));
 			boolean result = opObj.deleteEvent(name, type, selectedEventType);
 			out.print(result);
 		} catch (Exception e) {

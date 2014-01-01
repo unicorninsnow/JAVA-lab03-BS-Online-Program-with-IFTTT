@@ -35,10 +35,10 @@ public class lookupUser extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-		int privilege = Integer.parseInt(request.getParameter("privilege"));
 		PrintWriter out = null;
 		try {
 			out = response.getWriter();
+			int privilege = Integer.parseInt(request.getParameter("privilege"));
 			UserTableManager  lookupUser = new UserTableManager();
 			String userData = ResultSet2Json.resultSetToJson(lookupUser.lookupUser(privilege));
 			out.print(userData);

@@ -34,11 +34,11 @@ public class GetAddedEvent extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)  {
 		// TODO Auto-generated method stub
-		int type = Integer.parseInt(request.getParameter("type"));
 		EventTableManager opObj = new EventTableManager();
 		PrintWriter out = null;
 		try {
 			out = response.getWriter();
+			int type = Integer.parseInt(request.getParameter("type"));
 			String result = ResultSet2Json.resultSetToJson(opObj.getAddedEvent(type));
 			out.print(result);
 		} catch (Exception e) {
@@ -51,11 +51,11 @@ public class GetAddedEvent extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)  {
 		// TODO Auto-generated method stub
-		int type = Integer.parseInt(request.getParameter("type"));
 		EventTableManager opObj = new EventTableManager();
 		PrintWriter out = null;
 		try {
 			out = response.getWriter();
+			int type = Integer.parseInt(request.getParameter("type"));
 			String result = ResultSet2Json.resultSetToJson(opObj.getAddedEvent(type));
 			out.print(result);
 		} catch (Exception e) {

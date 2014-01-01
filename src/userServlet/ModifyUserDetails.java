@@ -33,15 +33,15 @@ public class ModifyUserDetails extends HttpServlet {
 		// TODO Auto-generated method stub
 		String name = request.getParameter("name");
 		String passWd = request.getParameter("passWd");
-		int sex = Integer.parseInt(request.getParameter("sex"));
 		String birthDate = request.getParameter("birthDate");
 		String imageUrl = request.getParameter("imageUrl");
 		String email = request.getParameter("email");
 		PrintWriter out = null;
 		try {
+			out = response.getWriter();
+			int sex = Integer.parseInt(request.getParameter("sex"));
 			UserTableManager modifyUser = new UserTableManager();
 			boolean flag = modifyUser.modifyUserData(name, passWd, sex, birthDate, imageUrl, email);
-			out = response.getWriter();
 			out.print(flag);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -55,15 +55,15 @@ public class ModifyUserDetails extends HttpServlet {
 		// TODO Auto-generated method stub
 		String name = request.getParameter("name");
 		String passWd = request.getParameter("passWd");
-		int sex = Integer.parseInt(request.getParameter("sex"));
 		String birthDate = request.getParameter("birthDate");
 		String imageUrl = request.getParameter("imageUrl");
 		String email = request.getParameter("email");
 		PrintWriter out = null;
 		try {
+			out = response.getWriter();
+			int sex = Integer.parseInt(request.getParameter("sex"));
 			UserTableManager modifyUser = new UserTableManager();
 			boolean flag = modifyUser.modifyUserData(name, passWd, sex, birthDate, imageUrl, email);
-			out = response.getWriter();
 			out.print(flag);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

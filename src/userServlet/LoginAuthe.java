@@ -38,15 +38,22 @@ public class LoginAuthe extends HttpServlet {
 		//用户名和密码
 	
 		    String name = request.getParameter("name");
-		    String passWd = request.getParameter("passwD");
+		    String passWd = request.getParameter("passWd");
 			UserTableManager loginCheck;
+			System.out.print("hahha");
 			PrintWriter out = null;
 			try {
 				out = response.getWriter();
 				loginCheck = new UserTableManager();
 			
 			if(loginCheck.login(name, passWd))  //登录成功
-		          out.print("true");
+			{
+				UserTableManager temp = new UserTableManager();
+			    request.getSession().setAttribute("name",name);
+			    request.getSession().setAttribute("privilege",temp.getUserPrivilege(name));
+			    System.out.print(temp.getUserPrivilege(name));
+		        out.print("true");
+			}
 			else 
 				//登录失败
 				  out.print("false");
@@ -64,15 +71,23 @@ public class LoginAuthe extends HttpServlet {
 		//用户名和密码
 		
 	    String name = request.getParameter("name");
-	    String passWd = request.getParameter("passwD");
+	    //request.getSession().setAttribute("name",name);
+	    String passWd = request.getParameter("passWd");
 		UserTableManager loginCheck;
 		PrintWriter out = null;
+		System.out.print("hahha");
 		try {
 			out = response.getWriter();
 			loginCheck = new UserTableManager();
 		
 		if(loginCheck.login(name, passWd))  //登录成功
-	          out.print("true");
+		{   
+			UserTableManager temp = new UserTableManager();
+			request.getSession().setAttribute("name",name);
+		    request.getSession().setAttribute("privilege",temp.getUserPrivilege(name));
+		    System.out.print(temp.getUserPrivilege(name));
+	        out.print("true");
+		}
 		else 
 			//登录失败
 			  out.print("false");

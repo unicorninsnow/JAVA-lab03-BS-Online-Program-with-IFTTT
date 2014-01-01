@@ -20,6 +20,7 @@ import weibo4j.model.Status;
 import weibo4j.model.StatusWapper;
 import weibo4j.model.WeiboException;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.FetchProfile;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -51,7 +52,7 @@ public class EventDriveThread extends  Thread {
 	private String name = null;  //因为要记录消费记录的拥有者
 	private ResultSet taskResultSet = null;
 	/*收邮件,连接邮箱*/
-	private Session sessionImap;
+	private Session sessionImap = null;
 	
 	/**
 	 * 构造函数
@@ -67,7 +68,7 @@ public class EventDriveThread extends  Thread {
 		this.taskID = taskID;
 	    this.name = name;
 		taskResultSet = TaskTableManager.getTaskDetails(taskID);
-		
+		taskResultSet.next();
 		
 	}
 
@@ -79,9 +80,10 @@ public class EventDriveThread extends  Thread {
 	}
 
 	/*发邮件*/
-	private void sendGMail() throws MessagingException, SQLException {
+	private void sendGMail() throws MessagingException, SQLException, ClassNotFoundException, NamingException {
 		/* 发邮件 */
 		System.out.println("fayoujian");
+		try{
 		Properties propsSmtp = System.getProperties();
 		propsSmtp.setProperty("mail.smtp.host", "smtp.gmail.com");
 		final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
@@ -108,6 +110,14 @@ public class EventDriveThread extends  Thread {
 		store.sendMessage(message, message.getAllRecipients());
 		store.close();
 		}
+		}
+		//邮箱密码和账号不匹配，则提示
+		catch (AuthenticationFailedException e){
+			String taskName = new TaskTableManager().getTaskName(taskID);
+			String content = "系统通知:您名为 "+taskName+" 的任务邮箱账号和密码认证错误，请重新检查确认";
+			new MsgTableManager().sendInstationMessage("admin", name, content);
+			return;
+		}
 		//else
 		//给用户发信
 		
@@ -119,8 +129,10 @@ public class EventDriveThread extends  Thread {
 	 * @throws HttpException
 	 * @throws IOException
 	 * @throws SQLException
+	 * @throws NamingException 
+	 * @throws ClassNotFoundException 
 	 */
-    private void updateWeibo() throws HttpException, IOException, SQLException{
+    private void updateWeibo() throws HttpException, IOException, SQLException, ClassNotFoundException, NamingException{
 			String access_token = getWeiboToken.getToken(taskResultSet.getString("updateWeiboID"),taskResultSet.getString("updateWeiboPassWd"));
 			Timeline tm = new Timeline();
 			System.out.println("access_token"+access_token);
@@ -132,6 +144,14 @@ public class EventDriveThread extends  Thread {
 				e.printStackTrace();
 			}
 			}
+			//账号和密码不匹配，发消息告诉用户
+			else{
+				String taskName = new TaskTableManager().getTaskName(taskID);
+				String content = "系统通知:您名为 "+taskName+" 的任务微博账号和密码认证错误，请重新检查确认";
+				new MsgTableManager().sendInstationMessage("admin", name, content);
+				return;
+			}
+				
 
 	}
     /**
@@ -151,8 +171,7 @@ public class EventDriveThread extends  Thread {
 		    propsImap.setProperty("mail.imap.port", "993");
 		    propsImap.setProperty("mail.imap.socketFactory.port", "993");
 		    sessionImap = Session.getDefaultInstance(propsImap, null);	
-    	
-    	
+		    try{
     	    String srcMailBox = taskResultSet.getString("srcMailBox");
 		    String srcMailPassWd = taskResultSet.getString("srcMailPassWd");
 			URLName urln = new URLName("imap", "imap.gmail.com", 993, null,
@@ -160,7 +179,6 @@ public class EventDriveThread extends  Thread {
 			Store store = null;
 			int count = 0;
 			Message[] messages = null;
-			try{
 		    store = sessionImap.getStore(urln);
 			Folder inbox = null;
 			store.connect();
@@ -205,15 +223,17 @@ public class EventDriveThread extends  Thread {
      * @throws IOException
      * @throws WeiboException
      * @throws InterruptedException
+     * @throws NamingException 
+     * @throws ClassNotFoundException 
      */
     
-	private boolean checkWeiboContent() throws SQLException, HttpException, IOException, WeiboException, InterruptedException{
+	private boolean checkWeiboContent() throws SQLException, HttpException, IOException, WeiboException, InterruptedException, ClassNotFoundException, NamingException{
     	    String weiboID = taskResultSet.getString("updateWeiboID");
     	    String weiboPassWd = taskResultSet.getString("updateWeiboPassWd");
     	    String checkContent = taskResultSet.getString("weiboCheckCon"); 
     	    System.out.println("checkContent"+checkContent);
     		String access_token =  getWeiboToken.getToken(weiboID,weiboPassWd);
-    		System.out.println(access_token);
+    		if(access_token!=null){
     		Timeline tm = new Timeline();
     		tm.client.setToken(access_token);
     		while(true){
@@ -232,6 +252,15 @@ public class EventDriveThread extends  Thread {
    			 Thread.sleep(10000);   
     		}
     		return true;
+    		}
+    		else
+    		{
+    			String taskName = new TaskTableManager().getTaskName(taskID);
+				String content = "系统通知:您名为 "+taskName+" 的任务监听微博账号和密码认证错误，请重新检查确认";
+				new MsgTableManager().sendInstationMessage("admin", name, content);
+				return false;
+    		}
+    			
     }
 	
 
@@ -290,6 +319,8 @@ public class EventDriveThread extends  Thread {
 					  System.out.println("发完");
 				  }
 		  }
+			   else
+				   new MsgTableManager().sendInstationMessage("admin",name, "admin:您的定时范围出错，请检查确认");
 		  }
 		  else if(thisType==1){//收到邮件作为触发源
 			  System.out.println(thisType+"youjian");
@@ -318,10 +349,7 @@ public class EventDriveThread extends  Thread {
 						  updateWeibo();
 				  }
 			  }
-			   
-		
-	
-		  
+			     
 		UserTableManager userManage = new UserTableManager();
 		int increAccount = 1000*userManage.getUserDiscount(name)/10;
 		System.out.println("zhekou    "+increAccount);
@@ -335,10 +363,8 @@ public class EventDriveThread extends  Thread {
 		PaymentLogTableManager paymentLogManager = new PaymentLogTableManager();
 		paymentLogManager.addPaymentLog(name, thisType, thatType,nowString,increAccount);
 		//任务运行完成，从hash pool删除
-		System.out.println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
 		RunningTaskPool deleteRanThread = new RunningTaskPool();
 		deleteRanThread.stopTask(name, taskID);
-		System.out.println("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

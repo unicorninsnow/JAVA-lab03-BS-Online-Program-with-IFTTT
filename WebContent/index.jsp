@@ -1,13 +1,13 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="utf-8"%>
+<!-- <%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%> -->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <!-- link rel="stylesheet" type="text/css" href="iftttStyle.css">-->
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="shortcut icon" href="bootstrap-3.0.0/assets/ico/favicon.png">
+<link rel="shortcut icon" href="../bootstrap-3.0.0/assets/ico/favicon.png">
 <title>IFTTT - Change Your Life</title>
 
 <!-- Bootstrap -->
@@ -41,7 +41,7 @@
 				<a class="navbar-brand" href="#">IFTTT</a>
 			</div>
 			<div class="navbar-collapse collapse">
-				<form class="navbar-form navbar-right" onsubmit="" role="form">
+				<div class="navbar-form navbar-right" role="form">
 				
 					<p id="signinInfo" class="form-group"><font color="red"></font></p>
 					<div class="form-group">
@@ -52,16 +52,16 @@
 						<input type="password" id="passwdsignin"  placeholder="Password" class="form-control"
 							onblur="isPasswdValid(this)">
 					</div>
-					<button type="submit"  class="btn btn-success" onclick="signin()">Sign in</button>
+					<button  class="btn btn-success" onclick="signin()">Sign in</button>
 					
 					
 				
-				</form>
+				</div>
 			</div>
 			<!--/.navbar-collapse -->
 		</div>
 	</div>
-</br>
+<br/>
 	<!-- Main jumbotron for a primary marketing message or call to action -->
 	<div class="container theme-showcase">
 		<div class="jumbotron">
@@ -69,7 +69,7 @@
 				<h1>IFTTT</h1>
 				<p>Change Your Life!</p>
 				<p>
-					<a href="SignUp.html" class="btn btn-primary btn-lg" role="button">
+					<a href="SignUp.jsp" class="btn btn-primary btn-lg" role="button">
 						Join Us NOW! »
 					</a>
 				</p>
@@ -132,7 +132,6 @@
 		<footer>
 			<p>© Company 2013</p>
 		</footer>
-	</div>
 	<!-- /container -->
 
 

@@ -33,15 +33,14 @@ public class ModifyAdminSendMessage extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
-		int privilege = Integer.parseInt(request.getParameter("privilege"));
 		String messageID = request.getParameter("messageID");
 		String content = request.getParameter("content");
-		String receiver = request.getParameter("receiver");
-		int type = Integer.parseInt(request.getParameter("type"));
-		MsgTableManager opObj = new MsgTableManager();
+		String receiver = request.getParameter("receiver");		MsgTableManager opObj = new MsgTableManager();
 		PrintWriter out = null;
 		try {
 			out = response.getWriter();
+			int privilege = Integer.parseInt(request.getParameter("privilege"));
+			int type = Integer.parseInt(request.getParameter("type"));
 			int result = opObj.modifyAdminSendMessage(privilege, messageID, type, content, receiver);
 			if(result==-1)
 			   out.print("errorReceiver");
@@ -59,15 +58,16 @@ public class ModifyAdminSendMessage extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response){
 		// TODO Auto-generated method stub
-		int privilege = Integer.parseInt(request.getParameter("privilege"));
+
 		String messageID = request.getParameter("messageID");
 		String content = request.getParameter("content");
 		String receiver = request.getParameter("receiver");
-		int type = Integer.parseInt(request.getParameter("type"));
 		MsgTableManager opObj = new MsgTableManager();
 		PrintWriter out = null;
 		try {
 			out = response.getWriter();
+			int type = Integer.parseInt(request.getParameter("type"));
+			int privilege = Integer.parseInt(request.getParameter("privilege"));
 			int result = opObj.modifyAdminSendMessage(privilege, messageID, type, content, receiver);
 			if(result==-1)
 			   out.print("errorReceiver");

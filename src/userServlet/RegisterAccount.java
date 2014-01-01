@@ -34,15 +34,16 @@ public class RegisterAccount extends HttpServlet {
 		// TODO Auto-generated method stub
 		String name = request.getParameter("name");
 		String passWd = request.getParameter("passWd");
-		int sex = Integer.parseInt(request.getParameter("sex"));
+		
 		String birthDate = request.getParameter("birthDate");
 		String imageUrl = request.getParameter("imageUrl");
 		String email = request.getParameter("email");
 		PrintWriter out = null;
 		try {
+			out = response.getWriter();
+			int sex = Integer.parseInt(request.getParameter("sex"));
 			UserTableManager registerAccount = new UserTableManager();
 			registerAccount.userRegister(name, passWd, sex, birthDate, imageUrl, email);
-			out = response.getWriter();
 			out.println("true");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -54,24 +55,25 @@ public class RegisterAccount extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String name = request.getParameter("name");
-		String passWd = request.getParameter("passWd");
-		int sex = Integer.parseInt(request.getParameter("sex"));
-		String birthDate = request.getParameter("birthDate");
-		String imageUrl = request.getParameter("imageUrl");
-		String email = request.getParameter("email");
-		PrintWriter out = null;
-		try {
-			UserTableManager registerAccount = new UserTableManager();
-			registerAccount.userRegister(name, passWd, sex, birthDate, imageUrl, email);
-			out = response.getWriter();
-			out.print("true");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			out.print("error");
-		} 
-		
+				String name = request.getParameter("name");
+				String passWd = request.getParameter("passWd");
+				
+				String birthDate = request.getParameter("birthDate");
+				String imageUrl = request.getParameter("imageUrl");
+				String email = request.getParameter("email");
+				PrintWriter out = null;
+				try {
+					out = response.getWriter();
+					int sex = Integer.parseInt(request.getParameter("sex"));
+					UserTableManager registerAccount = new UserTableManager();
+					registerAccount.userRegister(name, passWd, sex, birthDate, imageUrl, email);
+					out.println("true");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+					out.println("error");
+				} 
+				
 	}
 
 }
